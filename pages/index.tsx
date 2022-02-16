@@ -1,4 +1,5 @@
 import { Container, Space, Text, Title } from '@mantine/core';
+import BikeFilters from '../src/components/BikeFilters';
 import BikesList from '../src/components/BikesList';
 import bikesJson from '../src/data/bikes.json';
 
@@ -17,6 +18,7 @@ export default function HomePage() {
         Rental
       </Title>
       <Space h="md" />
+      <BikeFilters />
       <BikesList bikes={bikesJson.data} />
     </Container>
   );
