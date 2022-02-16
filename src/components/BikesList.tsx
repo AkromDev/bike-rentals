@@ -21,8 +21,8 @@ function BikesList({ bikes }: Props) {
         { maxWidth: 600, cols: 1, spacing: 'sm' },
       ]}
     >
-      {bikes.map((bike: any) => (
-        <Card shadow="sm" padding="lg">
+      {bikes.map((bike: any, i: number) => (
+        <Card shadow="sm" padding="lg" key={i}>
           <Card.Section sx={{ cursor: 'pointer' }}>
             <Link href="/bike">
               <Box component="a">
