@@ -1,0 +1,94 @@
+{
+    "data": [
+        {
+            "title": "Kawasaki Z H2",
+            "model": "Kawasaki",
+            "color": "green",
+            "location": "Busan",
+            "rating": "4.4",
+            "ratingCount": 19,
+            "available": true,
+            "img": "/bikes/2021-Kawasaki-Z-H2.jpeg"
+        },
+        {
+            "title": "Aprilia RS 660",
+            "model": "Aprilia",
+            "color": "yellow",
+            "location": "Seoul",
+            "rating": "4.7",
+            "ratingCount": 5,
+            "available": false,
+            "img": "/bikes/Aprilia-RS-660.jpeg"
+        },
+        {
+            "title": "KIA Bike",
+            "model": "KIA",
+            "color": "blue",
+            "location": "Seoul",
+            "rating": "4.3",
+            "ratingCount": 9,
+            "available": true,
+            "img": "/bikes/royal-enfield-meteor-350.jpeg"
+        },
+        {
+            "title": "KTM 890 Adventure",
+            "model": "KTM",
+            "color": "red",
+            "location": "Seoul",
+            "rating": "4.3",
+            "ratingCount": 9,
+            "available": true,
+            "img": "/bikes/KTM-890-Adventure.jpeg"
+        },
+        {
+            "title": "KIA Bike",
+            "model": "KIA",
+            "color": "blue",
+            "location": "Seoul",
+            "rating": "4.3",
+            "ratingCount": 9,
+            "available": true,
+            "img": "/bikes/royal-enfield-meteor-350.jpeg"
+        },
+        {
+            "title": "Yamaha Tenere 700",
+            "model": "Yamaha",
+            "color": "blue",
+            "location": "Seoul",
+            "rating": "4.3",
+            "ratingCount": 9,
+            "available": true,
+            "img": "/bikes/Yamaha-Tenere-700.jpeg"
+        },
+        {
+            "title": "KIA Bike",
+            "model": "KIA",
+            "color": "blue",
+            "location": "Seoul",
+            "rating": "4.3",
+            "ratingCount": 9,
+            "available": true,
+            "img": "/bikes/Triumph-Trident-660.jpeg"
+        },
+              {
+            "title": "Kawasaki Z H2",
+            "model": "Kawasaki",
+            "color": "green",
+            "location": "Busan",
+            "rating": "4.4",
+            "ratingCount": 19,
+            "available": true,
+            "img": "/bikes/2021-Kawasaki-Z-H2.jpeg"
+        },
+        {
+            "title": "Aprilia RS 660",
+            "model": "Aprilia",
+            "color": "yellow",
+            "location": "Seoul",
+            "rating": "4.7",
+            "ratingCount": 5,
+            "available": false,
+            "img": "/bikes/Aprilia-RS-660.jpeg"
+        }
+    ]
+}

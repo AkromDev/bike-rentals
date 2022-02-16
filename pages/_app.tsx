@@ -2,6 +2,7 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { MantineProvider, NormalizeCSS, GlobalStyles } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
+import '../global.css';
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
@@ -17,6 +18,10 @@ export default function App(props: AppProps) {
         theme={{
           /** Put your mantine theme override here */
           colorScheme: 'light',
+          fontFamily: 'Inter, sans-serif',
+          headings: {
+            fontFamily: 'Inter, sans-serif',
+          },
         }}
       >
         <NormalizeCSS />
