@@ -1,6 +1,7 @@
 {
     "data": [
         {
+            "id": 1,
             "title": "Kawasaki Z H2",
             "model": "Kawasaki",
             "color": "green",
@@ -11,6 +12,7 @@
             "img": "/bikes/2021-Kawasaki-Z-H2.jpeg"
         },
         {
+            "id": 2,
             "title": "Aprilia RS 660",
             "model": "Aprilia",
             "color": "yellow",
@@ -21,6 +23,7 @@
             "img": "/bikes/Aprilia-RS-660.jpeg"
         },
         {
+            "id": 3,
             "title": "KIA Bike",
             "model": "KIA",
             "color": "blue",
@@ -31,6 +34,7 @@
             "img": "/bikes/royal-enfield-meteor-350.jpeg"
         },
         {
+            "id": 4,
             "title": "KTM 890 Adventure",
             "model": "KTM",
             "color": "red",
@@ -41,6 +45,7 @@
             "img": "/bikes/KTM-890-Adventure.jpeg"
         },
         {
+            "id": 5,
             "title": "KIA Bike",
             "model": "KIA",
             "color": "blue",
@@ -51,6 +56,7 @@
             "img": "/bikes/royal-enfield-meteor-350.jpeg"
         },
         {
+            "id": 6,
             "title": "Yamaha Tenere 700",
             "model": "Yamaha",
             "color": "blue",
@@ -61,6 +67,7 @@
             "img": "/bikes/Yamaha-Tenere-700.jpeg"
         },
         {
+            "id": 7,
             "title": "KIA Bike",
             "model": "KIA",
             "color": "blue",
@@ -70,7 +77,8 @@
             "available": true,
             "img": "/bikes/Triumph-Trident-660.jpeg"
         },
-              {
+        {
+            "id": 8,
             "title": "Kawasaki Z H2",
             "model": "Kawasaki",
             "color": "green",
@@ -81,6 +89,7 @@
             "img": "/bikes/2021-Kawasaki-Z-H2.jpeg"
         },
         {
+            "id": 9,
             "title": "Aprilia RS 660",
             "model": "Aprilia",
             "color": "yellow",
