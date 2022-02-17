@@ -24,7 +24,7 @@ function BikesList({ bikes }: Props) {
       {bikes.map((bike: any, i: number) => (
         <Card shadow="sm" padding="lg" key={i}>
           <Card.Section sx={{ cursor: 'pointer' }}>
-            <Link href="/bike">
+            <Link href={`/bikes/${bike.id}`}>
               <Box component="a">
                 <Image
                   alt="Mountains"
