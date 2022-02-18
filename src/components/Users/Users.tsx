@@ -31,7 +31,7 @@ const UsersTable = () => {
     <Box sx={(t) => ({ height: '100%', padding: t.spacing.lg, background: 'white' })}>
       <DataTable
         columns={[
-          { accessor: 'id', Header: 'Id' },
+          // { accessor: 'id', Header: 'Id' },
           { accessor: 'name', Header: 'Name' },
           { accessor: 'email', Header: 'Email Address' },
           {

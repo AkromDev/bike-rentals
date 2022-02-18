@@ -33,7 +33,7 @@ export default function Header({ navbarOpened, toggleNavbar }: HeaderProps) {
             <Link href="/">
               <Anchor variant="text">Home</Anchor>
             </Link>
-            <Link href="/admin">
+            <Link href="/admin/reservations">
               <Anchor variant="text">Admin</Anchor>
             </Link>
           </Group>

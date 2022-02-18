@@ -33,7 +33,7 @@ import { StringFilter } from './Filters';
 const pageSizeOptions = ['10', '25', '50', '100'];
 
 const useStyles = createStyles((t) => ({
-  root: { height: '100%', display: 'block' },
+  root: { height: '100%', display: 'block', position: 'relative' },
   tableContainer: {
     display: 'block',
     overflow: 'auto',
