@@ -1,12 +1,13 @@
-import { Title } from '@mantine/core';
+import { Container } from '@mantine/core';
 import React, { ReactNode } from 'react';
 import AdminLayout from 'src/components/layout/admin-layout';
+import UsersTable from 'src/components/Users/Users';
 
 export default function Users() {
   return (
-    <div>
-      <Title>Reservations</Title>
-    </div>
+    <Container>
+      <UsersTable />
+    </Container>
   );
 }
 

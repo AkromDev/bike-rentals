@@ -37,7 +37,7 @@ export default function AdminLayout({ children }: AdminLayout) {
         navbarOffsetBreakpoint="sm"
         fixed
         navbar={
-          <Navbar padding="md" hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 300, lg: 400 }}>
+          <Navbar padding="md" hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 240, lg: 300 }}>
             <Navbar.Section grow mt="xs">
               <AdminLinks />
             </Navbar.Section>
