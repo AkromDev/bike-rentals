@@ -1,5 +1,3 @@
-import React from 'react';
+import MainLayout from './Layout';
 
-export default function MainLayout() {
-  return <div>MainLayout</div>;
-}
+export default MainLayout;

@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
+import MainLayout from 'src/components/layout/main-layout';
 
 export default function HomePage() {
   const router = useRouter();
@@ -8,3 +9,7 @@ export default function HomePage() {
   }, []);
   return null;
 }
+
+HomePage.getLayout = function getLayout(page: ReactNode) {
+  return <MainLayout>{page}</MainLayout>;
+};
