@@ -6,8 +6,9 @@ import '../global.css';
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
+  const getLayout = Component.getLayout || ((page) => page);
 
-  return (
+  return getLayout(
     <>
       <Head>
         <title>Mantine next example</title>
