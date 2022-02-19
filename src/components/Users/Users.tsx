@@ -1,5 +1,7 @@
-import { Box, Button, Group, Modal, useMantineTheme } from '@mantine/core';
+import { Box, Button, Group, Modal } from '@mantine/core';
 import { ReloadIcon } from '@modulz/radix-icons';
+import axios from 'axios';
+import { useAuthUser, withAuthUser } from 'next-firebase-auth';
 import { useEffect, useState } from 'react';
 import { DataTable } from 'src/components/DataTable';
 import UserForm from './UserForm';
@@ -12,40 +14,54 @@ const UsersTable = () => {
   const [pageCount, setPageCount] = useState(0);
   const [total, setTotal] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
+  const AuthUser = useAuthUser();
+  const [refresh, setRefresh] = useState(false);
 
-  const getDataSource = () => {
-    toggleLoading(true);
-    fetch('https://jsonplaceholder.typicode.com/users')
-      .then((res) => res.json())
-      .then((resData) => {
-        setData(resData);
-        setTotal(resData.length);
-        setPageCount(Math.ceil(resData.length / 10));
-      })
-      .finally(() => {
-        toggleLoading(false);
-      });
-  };
   useEffect(() => {
-    getDataSource();
-  }, []);
+    const getUsers = async () => {
+      toggleLoading(true);
+      const idToken = await AuthUser.getIdToken();
+      try {
+        const usersRes = await axios.get('/api/users', {
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+          },
+        });
+        setData(usersRes.data.users);
+        setTotal(usersRes.data.users.length);
+        setPageCount(Math.ceil(usersRes.data.users.length / 10));
+      } catch (error) {
+        console.log('getUsersError', error);
+      } finally {
+        toggleLoading(false);
+      }
+    };
+    getUsers();
+  }, [AuthUser, refresh]);
 
   return (
     <Box sx={(t) => ({ height: '100%', padding: t.spacing.lg, background: 'white' })}>
       <Group sx={{ marginBottom: 20 }}>
-        <Button onClick={getDataSource} disabled={loading}>
+        <Button disabled={loading} onClick={() => setRefresh((r) => !r)}>
           <ReloadIcon color="white" />
         </Button>
         <Button onClick={() => setModalOpen(true)}>Create user</Button>
       </Group>
       <Modal opened={modalOpen} onClose={() => setModalOpen(false)} title="Create a new user">
-        <UserForm noShadow noPadding onSuccess={() => setModalOpen(false)} />
+        <UserForm
+          noShadow
+          noPadding
+          onSuccess={() => {
+            setModalOpen(false);
+            setRefresh((r) => !r);
+          }}
+        />
       </Modal>
       <DataTable
         columns={[
-          // { accessor: 'id', Header: 'Id' },
-          { accessor: 'name', Header: 'Name' },
+          { accessor: 'displayName', Header: 'Name' },
           { accessor: 'email', Header: 'Email Address' },
+          { accessor: 'role', Header: 'Role' },
           {
             Header: 'Actions',
             Filter: () => null,
@@ -65,4 +81,4 @@ const UsersTable = () => {
   );
 };
 
-export default UsersTable;
+export default withAuthUser()(UsersTable);
