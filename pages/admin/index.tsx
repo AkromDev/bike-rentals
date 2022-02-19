@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import withAuthorizationSSR from 'utils/withAuthorizationSSR';
 
 export default function AdminIdex() {
   const router = useRouter();
@@ -8,3 +9,4 @@ export default function AdminIdex() {
   }, []);
   return null;
 }
+export const getServerSideProps = withAuthorizationSSR();
