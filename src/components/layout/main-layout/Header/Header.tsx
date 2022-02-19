@@ -1,6 +1,7 @@
 import { Anchor, Burger, Container, Group } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import Link from 'next/link';
+import { useAuthUser, withAuthUser } from 'next-firebase-auth';
 import React from 'react';
 import { NAVBAR_BREAKPOINT } from '../Navbar/Navbar.styles';
 import useStyles from './Header.styles';
@@ -10,8 +11,9 @@ interface HeaderProps {
   toggleNavbar(): void;
 }
 
-export default function Header({ navbarOpened, toggleNavbar }: HeaderProps) {
+function Header({ navbarOpened, toggleNavbar }: HeaderProps) {
   const { classes } = useStyles();
+  const AuthUser = useAuthUser();
   const burgerTitle = navbarOpened ? 'Open navigation' : 'Hide navigation';
   const renderNavbar = useMediaQuery(`(max-width: ${NAVBAR_BREAKPOINT}px)`);
 
@@ -33,12 +35,26 @@ export default function Header({ navbarOpened, toggleNavbar }: HeaderProps) {
             <Link href="/">
               <Anchor variant="text">Home</Anchor>
             </Link>
-            <Link href="/admin/reservations">
-              <Anchor variant="text">Admin</Anchor>
-            </Link>
+            {!AuthUser.email && (
+              <Link href="/auth">
+                <Anchor variant="text">Register</Anchor>
+              </Link>
+            )}
+            {AuthUser.email && (
+              <Link href="/profile">
+                <Anchor variant="text">Profile</Anchor>
+              </Link>
+            )}
+            {AuthUser.email && (
+              <Link href="/admin/reservations">
+                <Anchor variant="text">Admin</Anchor>
+              </Link>
+            )}
           </Group>
         )}
       </Container>
     </div>
   );
 }
+
+export default withAuthUser<HeaderProps>()(Header);

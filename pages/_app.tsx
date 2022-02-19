@@ -4,8 +4,13 @@ import { MantineProvider, NormalizeCSS, GlobalStyles } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
 import '../global.css';
 
+import initAuth from 'utils/initAuth';
+
+initAuth();
+
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
+  //@ts-ignore
   const getLayout = Component.getLayout || ((page) => page);
 
   return getLayout(
