@@ -15,7 +15,8 @@ import {
 } from '@mantine/core';
 import { getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import useCreateUser from './hooks/useCreateUser';
+import { firebaseErrorMessages } from 'src/constants/firebaseErrorMessages';
+import useSignUp from './hooks/useSignUp';
 import useSignIn from './hooks/useSignIn';
 
 export interface AuthenticationFormProps {
@@ -25,10 +26,6 @@ export interface AuthenticationFormProps {
   style?: React.CSSProperties;
 }
 
-const firebaseError: Record<string, string> = {
-  'auth/wrong-password': 'Password is incorrect',
-  'auth/user-not-found': 'User does not exist',
-};
 export default function AuthenticationForm({
   noShadow,
   noPadding,
@@ -39,7 +36,7 @@ export default function AuthenticationForm({
   const [formType, setFormType] = useState<'register' | 'login'>('register');
   const theme = useMantineTheme();
 
-  const [createUser, _, registerLoading, registerError] = useCreateUser(auth);
+  const [signUp, _, registerLoading, registerError] = useSignUp(auth);
   const [signIn, __, loginLoading, loginError] = useSignIn(auth);
 
   const toggleFormType = () => {
@@ -73,7 +70,7 @@ export default function AuthenticationForm({
     if (formType === 'login') {
       signIn(form.values.email, form.values.password);
     } else {
-      createUser(form.values.email, form.values.password, form.values.fullName);
+      signUp(form.values.email, form.values.password, form.values.fullName);
     }
   };
 
@@ -144,7 +141,7 @@ export default function AuthenticationForm({
 
         {formType === 'login' && loginError && (
           <Text color="red" size="sm" mt="sm">
-            {firebaseError[loginError.code] || loginError.message}
+            {firebaseErrorMessages[loginError.code] || loginError.message}
           </Text>
         )}
 

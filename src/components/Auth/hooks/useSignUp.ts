@@ -14,7 +14,7 @@ export default (auth: Auth, options?: CreateUserOptions): EmailAndPasswordAction
   const [registeredUser, setRegisteredUser] = useState<UserCredential>();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const useCreateUser = async (email: string, password: string, displayName?: string) => {
+  const signUp = async (email: string, password: string, displayName?: string) => {
     setLoading(true);
     try {
       const user = await createUserWithEmailAndPassword(auth, email, password);
@@ -32,6 +32,6 @@ export default (auth: Auth, options?: CreateUserOptions): EmailAndPasswordAction
     }
   };
 
-  const resArray: EmailAndPasswordActionHook = [useCreateUser, registeredUser, loading, error];
+  const resArray: EmailAndPasswordActionHook = [signUp, registeredUser, loading, error];
   return useMemo<EmailAndPasswordActionHook>(() => resArray, resArray);
 };

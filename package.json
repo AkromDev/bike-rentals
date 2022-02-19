@@ -20,6 +20,7 @@
     "@mantine/prism": "^3.6.8",
     "@modulz/radix-icons": "^4.0.0",
     "@primer/octicons-react": "^16.3.1",
+    "axios": "^0.26.0",
     "dayjs": "^1.10.7",
     "firebase": "^9.6.7",
     "firebase-admin": "^10.0.2",
@@ -53,7 +54,7 @@
     "eslint-plugin-jest": "^24.3.6",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.24.0",
-    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-react-hooks": "^4.3.0",
     "jest": "^26.6.3",
     "typescript": "4.5.2"
   }

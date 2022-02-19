@@ -1,5 +1,8 @@
 module.exports = {
-  extends: ['@mantine/eslint-config'],
+  extends: [
+  '@mantine/eslint-config',     
+  "plugin:react-hooks/recommended"
+  ],
   parserOptions: {
     project: './tsconfig.json',
   },
@@ -15,5 +18,7 @@ module.exports = {
       }
     ],
     "@typescript-eslint/no-use-before-define": 0,
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   },
 };

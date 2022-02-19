@@ -32,7 +32,7 @@ export default function App(props: AppProps) {
       >
         <NormalizeCSS />
         <GlobalStyles />
-        <NotificationsProvider>
+        <NotificationsProvider position="top-right">
           <Component {...pageProps} />
         </NotificationsProvider>
       </MantineProvider>
