@@ -1,9 +1,13 @@
 import { Box, Button, Group, Modal } from '@mantine/core';
-import { ReloadIcon } from '@modulz/radix-icons';
+import { useNotifications } from '@mantine/notifications';
+import { CheckIcon, ReloadIcon } from '@modulz/radix-icons';
+import { XCircleFillIcon } from '@primer/octicons-react';
 import axios from 'axios';
-import { useAuthUser, withAuthUser } from 'next-firebase-auth';
+import { useAuthUser, withAuthUser, AuthAction } from 'next-firebase-auth';
 import { useEffect, useState } from 'react';
 import { DataTable } from 'src/components/DataTable';
+import SelectFilter from '../DataTable/Filters/SelectFilter';
+import useDeleteUser from './hooks/useDeleteUser';
 import UserForm from './UserForm';
 import UsersActionMenu from './UsersActionMenu';
 
@@ -16,6 +20,9 @@ const UsersTable = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const AuthUser = useAuthUser();
   const [refresh, setRefresh] = useState(false);
+  const [deleteUser] = useDeleteUser();
+  const notifications = useNotifications();
+  const [loadingItemId, setLoadingItemId] = useState('');
 
   useEffect(() => {
     const getUsers = async () => {
@@ -39,6 +46,29 @@ const UsersTable = () => {
     getUsers();
   }, [AuthUser, refresh]);
 
+  const onDeleteClick = (id: string) => {
+    setLoadingItemId(id);
+    deleteUser(id)
+      .then(() => {
+        notifications.showNotification({
+          title: 'Success',
+          message: 'User is successfully deleted',
+          icon: <CheckIcon />,
+        });
+        setRefresh((r) => !r);
+      })
+      .catch((err) => {
+        notifications.showNotification({
+          title: 'Error',
+          message: err?.message || 'User deletetion failed',
+          icon: <XCircleFillIcon />,
+          color: 'red',
+        });
+      })
+      .finally(() => {
+        setLoadingItemId('');
+      });
+  };
   return (
     <Box sx={(t) => ({ height: '100%', padding: t.spacing.lg, background: 'white' })}>
       <Group sx={{ marginBottom: 20 }}>
@@ -60,12 +90,25 @@ const UsersTable = () => {
       <DataTable
         columns={[
           { accessor: 'displayName', Header: 'Name' },
-          { accessor: 'email', Header: 'Email Address' },
-          { accessor: 'role', Header: 'Role' },
+          { accessor: 'email', Header: 'Email' },
           {
+            accessor: 'role',
+            Header: 'Role',
+            Filter: SelectFilter,
+            filter: 'includes',
+            disableSortBy: true,
+          },
+          {
+            accessor: 'uid',
             Header: 'Actions',
             Filter: () => null,
-            Cell: ({ cell }) => <UsersActionMenu row={cell.row} />,
+            disableSortBy: true,
+            Cell: ({ cell }) => (
+              <UsersActionMenu
+                onDeleteClick={() => onDeleteClick(cell.value)}
+                loading={cell.value === loadingItemId}
+              />
+            ),
           },
         ]}
         data={data}
@@ -81,4 +124,6 @@ const UsersTable = () => {
   );
 };
 
-export default withAuthUser()(UsersTable);
+export default withAuthUser({
+  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
+})(UsersTable);

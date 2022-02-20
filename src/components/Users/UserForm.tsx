@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
-import { useForm } from '@mantine/hooks';
-import { CheckIcon, EnvelopeClosedIcon, LockClosedIcon } from '@modulz/radix-icons';
 import {
-  TextInput,
-  PasswordInput,
   Button,
-  Paper,
-  Text,
   LoadingOverlay,
-  useMantineTheme,
+  Paper,
+  PasswordInput,
   Select,
+  Text,
+  TextInput,
+  useMantineTheme,
 } from '@mantine/core';
-import { getApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { useForm } from '@mantine/hooks';
 import { useNotifications } from '@mantine/notifications';
-import useCreateUser, { Role } from './hooks/useCreateUser';
+import { CheckIcon, EnvelopeClosedIcon, LockClosedIcon } from '@modulz/radix-icons';
+
+import React from 'react';
+import { Role } from 'src/common-types';
+import useCreateUser from './hooks/useCreateUser';
 
 export interface UserFormProps {
   onSuccess: () => void;
@@ -26,11 +26,10 @@ export interface UserFormProps {
 }
 
 export default function UserForm({ noShadow, noPadding, style, onSuccess }: UserFormProps) {
-  const auth = getAuth(getApp());
   const theme = useMantineTheme();
   const notifications = useNotifications();
 
-  const [createUser, loading, error] = useCreateUser(auth);
+  const [createUser, loading, error] = useCreateUser();
 
   const form = useForm({
     initialValues: {
@@ -73,6 +72,8 @@ export default function UserForm({ noShadow, noPadding, style, onSuccess }: User
         console.log({ err });
       });
   };
+
+  console.log('error', error);
 
   return (
     <Paper
@@ -118,7 +119,7 @@ export default function UserForm({ noShadow, noPadding, style, onSuccess }: User
         />
         {error && (
           <Text color="red" size="sm" mt="sm">
-            {error?.response?.data?.message || 'User creation failed'}
+            {error?.message || 'User creation failed'}
           </Text>
         )}
 

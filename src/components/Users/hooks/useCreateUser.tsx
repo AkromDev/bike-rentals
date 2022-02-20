@@ -1,48 +1,23 @@
-import { useMemo, useState } from 'react';
-import { Auth } from 'firebase/auth';
-import axios from 'axios';
+import { useCallback, useMemo } from 'react';
+import { Role } from 'src/common-types';
+import usePostRequestWithToken from 'src/hooks/usePostRequestWithToken';
 
-export type Role = 'Manager' | 'User';
-export type AuthActionHook<M> = [M, boolean, Record<string, any> | null];
-export type CreateUserHook = AuthActionHook<
-  (email: string, password: string, role: 'Manager' | 'User', displayName?: string) => Promise<void>
+export type PostActionHook<M> = [M, boolean, Record<string, any> | null];
+export type CreateUserHook = PostActionHook<
+  (email: string, password: string, role: Role, displayName?: string) => Promise<void>
 >;
 
-export default function useCreateUser(auth: Auth): CreateUserHook {
-  const [error, setError] = useState<Record<string, any> | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const createUser = async (
-    email: string,
-    password: string,
-    role: 'Manager' | 'User' = 'User',
-    displayName?: string
-  ) => {
-    setError(null);
-    setLoading(true);
-    try {
-      const idToken = (await auth.currentUser?.getIdToken()) || '';
-      await axios.post(
-        '/api/createUser',
-        {
-          email,
-          password,
-          role,
-          displayName,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${idToken}`,
-          },
-        }
-      );
-    } catch (err: any) {
-      setError(err);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
+export default function useCreateUser(): CreateUserHook {
+  const { postRequestWithToken, loading, error } = usePostRequestWithToken();
 
-  const resArray: CreateUserHook = [createUser, loading, error];
-  return useMemo(() => resArray, resArray);
+  const createUser = useCallback(
+    async (email: string, password: string, role: Role = 'User', displayName?: string) =>
+      postRequestWithToken('/api/createUser', { email, password, role, displayName }),
+    [postRequestWithToken]
+  );
+
+  return useMemo(() => {
+    const resArray: CreateUserHook = [createUser, loading, error];
+    return resArray;
+  }, [createUser, loading, error]);
 }

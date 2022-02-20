@@ -1,8 +1,7 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
 import * as admin from 'firebase-admin';
-import { AuthError } from 'firebase/auth';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import handleFirebaseError from 'utils/handleFirebaseError';
 import withAuthUserTokenAPI from 'utils/withAuthUserTokenAPI';
-import { firebaseErrorMessages } from 'src/constants/firebaseErrorMessages';
 import initAuth from '../../utils/initAuth';
 
 initAuth();
@@ -25,14 +24,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(201).send({ uid });
   } catch (err: any) {
     console.log({ err });
-    return handleError(res, err);
+    return handleFirebaseError(res, err);
   }
 };
-
-function handleError(res: NextApiResponse, err: AuthError) {
-  return res
-    .status(500)
-    .send({ message: firebaseErrorMessages[err.code] || 'User creation failed' });
-}
 
 export default withAuthUserTokenAPI(handler, true);

@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { AuthUser, verifyIdToken } from 'next-firebase-auth';
-import { Role } from 'src/components/Users/hooks/useCreateUser';
+import { Role } from 'src/common-types';
 
 const manager: Role = 'Manager';
 

@@ -1,14 +1,20 @@
-import { Menu } from '@mantine/core';
+import { Loader, Menu } from '@mantine/core';
 import { Pencil1Icon, TrashIcon } from '@modulz/radix-icons';
-import { Row } from 'react-table';
 
-export default function UsersActionMenu({ row }: { row: Row<object> }) {
+type UsersActionMenuProps = {
+  onDeleteClick: () => void;
+  loading?: boolean;
+};
+export default function UsersActionMenu({ onDeleteClick, loading }: UsersActionMenuProps) {
   return (
-    <Menu sx={{ zIndex: 999 }} onClick={(e) => e.stopPropagation()} size="xl">
-      <Menu.Item icon={<Pencil1Icon />} onClick={() => alert(`Edit ${row.id}`)}>
-        Edit
-      </Menu.Item>
-      <Menu.Item color="red" icon={<TrashIcon />}>
+    <Menu
+      sx={{ zIndex: 9 }}
+      onClick={(e) => e.stopPropagation()}
+      size="xl"
+      control={loading ? <Loader size="sm" /> : undefined}
+    >
+      <Menu.Item icon={<Pencil1Icon />}>Edit</Menu.Item>
+      <Menu.Item color="red" icon={<TrashIcon />} onClick={onDeleteClick}>
         Delete
       </Menu.Item>
     </Menu>
