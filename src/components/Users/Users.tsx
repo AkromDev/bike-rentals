@@ -8,16 +8,16 @@ import { useEffect, useState } from 'react';
 import { DataTable } from 'src/components/DataTable';
 import SelectFilter from '../DataTable/Filters/SelectFilter';
 import useDeleteUser from './hooks/useDeleteUser';
-import UserForm from './UserForm';
+import UserForm, { FormUser } from './UserForm';
 import UsersActionMenu from './UsersActionMenu';
 
 const UsersTable = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Array<FormUser>>([]);
 
   const [loading, toggleLoading] = useState(false);
   const [pageCount, setPageCount] = useState(0);
   const [total, setTotal] = useState(0);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalInfo, setModalInfo] = useState<'create' | FormUser | null>(null);
   const AuthUser = useAuthUser();
   const [refresh, setRefresh] = useState(false);
   const [deleteUser] = useDeleteUser();
@@ -69,22 +69,30 @@ const UsersTable = () => {
         setLoadingItemId('');
       });
   };
+  const isCreateMode = !modalInfo || modalInfo === 'create';
+
   return (
     <Box sx={(t) => ({ height: '100%', padding: t.spacing.lg, background: 'white' })}>
       <Group sx={{ marginBottom: 20 }}>
         <Button disabled={loading} onClick={() => setRefresh((r) => !r)}>
           <ReloadIcon color="white" />
         </Button>
-        <Button onClick={() => setModalOpen(true)}>Create user</Button>
+        <Button onClick={() => setModalInfo('create')}>Create user</Button>
       </Group>
-      <Modal opened={modalOpen} onClose={() => setModalOpen(false)} title="Create a new user">
+      <Modal
+        opened={!!modalInfo}
+        onClose={() => setModalInfo(null)}
+        title={isCreateMode ? 'Create a new user' : 'Update the user'}
+      >
         <UserForm
           noShadow
           noPadding
           onSuccess={() => {
-            setModalOpen(false);
+            setModalInfo(null);
             setRefresh((r) => !r);
           }}
+          formType={isCreateMode ? 'create' : 'update'}
+          user={isCreateMode ? undefined : modalInfo}
         />
       </Modal>
       <DataTable
@@ -106,6 +114,10 @@ const UsersTable = () => {
             Cell: ({ cell }) => (
               <UsersActionMenu
                 onDeleteClick={() => onDeleteClick(cell.value)}
+                onEdit={() => {
+                  console.log('cell', cell);
+                  setModalInfo(cell.row.original as FormUser);
+                }}
                 loading={cell.value === loadingItemId}
               />
             ),

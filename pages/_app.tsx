@@ -16,7 +16,7 @@ export default function App(props: AppProps) {
   return getLayout(
     <>
       <Head>
-        <title>Mantine next example</title>
+        <title>Bike rentals</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
 

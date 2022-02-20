@@ -11,33 +11,61 @@ import {
 import { useForm } from '@mantine/hooks';
 import { useNotifications } from '@mantine/notifications';
 import { CheckIcon, EnvelopeClosedIcon, LockClosedIcon } from '@modulz/radix-icons';
+import { UserInfo } from 'firebase/auth';
 
 import React from 'react';
 import { Role } from 'src/common-types';
 import useCreateUser from './hooks/useCreateUser';
+import useUpdateUser from './hooks/useUpdateUser';
 
+function getInitialValues(formType: UserFormType, user: FormUser | undefined) {
+  if (formType === 'update' && user) {
+    return {
+      fullName: user.displayName || '',
+      email: user.email || '',
+      password: '',
+      role: user.role ? user.role : 'User',
+    };
+  }
+  return {
+    fullName: '',
+    email: '',
+    password: '',
+    role: 'User' as Role,
+  };
+}
+
+export type UserFormType = 'update' | 'create';
 export interface UserFormProps {
   onSuccess: () => void;
   onError?: () => void;
   noShadow?: boolean;
   noPadding?: boolean;
   noSubmit?: boolean;
+  formType?: UserFormType;
+  user?: FormUser;
   style?: React.CSSProperties;
 }
 
-export default function UserForm({ noShadow, noPadding, style, onSuccess }: UserFormProps) {
+export interface FormUser extends UserInfo {
+  role: Role;
+}
+export default function UserForm({
+  noShadow,
+  noPadding,
+  style,
+  onSuccess,
+  formType = 'create',
+  user,
+}: UserFormProps) {
   const theme = useMantineTheme();
   const notifications = useNotifications();
 
-  const [createUser, loading, error] = useCreateUser();
+  const [createUser, createLoading, createError] = useCreateUser();
+  const [updateUser, updateLoading, updateError] = useUpdateUser();
 
   const form = useForm({
-    initialValues: {
-      fullName: '',
-      email: '',
-      password: '',
-      role: 'User' as Role,
-    },
+    initialValues: getInitialValues(formType, user),
 
     validationRules: {
       fullName: (value) => value.trim().length >= 2,
@@ -58,22 +86,36 @@ export default function UserForm({ noShadow, noPadding, style, onSuccess }: User
   ];
 
   const handleSubmit = () => {
-    const { email, password, role, fullName } = form.values;
-    createUser(email, password, role, fullName)
-      .then(() => {
-        onSuccess();
-        notifications.showNotification({
-          title: 'Success',
-          message: 'User is successfully created',
-          icon: <CheckIcon />,
+    if (formType === 'create') {
+      const { email, password, role, fullName } = form.values;
+      createUser(email, password, role, fullName)
+        .then(() => {
+          onSuccess();
+          notifications.showNotification({
+            title: 'Success',
+            message: 'User is successfully created updated',
+            icon: <CheckIcon />,
+          });
+        })
+        .catch((err) => {
+          console.log({ err });
         });
-      })
-      .catch((err) => {
-        console.log({ err });
-      });
+    } else {
+      const { email, password, role, fullName } = form.values;
+      updateUser(user?.uid || '', email, password, role, fullName)
+        .then(() => {
+          onSuccess();
+          notifications.showNotification({
+            title: 'Success',
+            message: 'User is successfully updated',
+            icon: <CheckIcon />,
+          });
+        })
+        .catch((err) => {
+          console.log({ err });
+        });
+    }
   };
-
-  console.log('error', error);
 
   return (
     <Paper
@@ -86,7 +128,7 @@ export default function UserForm({ noShadow, noPadding, style, onSuccess }: User
       }}
     >
       <form onSubmit={form.onSubmit(handleSubmit)}>
-        <LoadingOverlay visible={loading} />
+        <LoadingOverlay visible={createLoading || updateLoading} />
         <TextInput
           data-autofocus
           required
@@ -106,7 +148,7 @@ export default function UserForm({ noShadow, noPadding, style, onSuccess }: User
           mt="md"
           required
           placeholder="Password"
-          label="Password"
+          label={formType === 'create' ? 'Password' : 'New password'}
           icon={<LockClosedIcon />}
           {...form.getInputProps('password')}
         />
@@ -117,14 +159,20 @@ export default function UserForm({ noShadow, noPadding, style, onSuccess }: User
           data={roles}
           {...form.getInputProps('role')}
         />
-        {error && (
+        {formType === 'create' && createError && (
           <Text color="red" size="sm" mt="sm">
-            {error?.message || 'User creation failed'}
+            {createError?.message || 'User creation failed'}
+          </Text>
+        )}
+
+        {formType === 'update' && updateError && (
+          <Text color="red" size="sm" mt="sm">
+            {updateError?.message || 'User failed'}
           </Text>
         )}
 
         <Button color="blue" type="submit" mt={20}>
-          Create User
+          {formType === 'create' ? 'Create' : 'Update'} User
         </Button>
       </form>
     </Paper>
