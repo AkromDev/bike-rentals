@@ -21,65 +21,67 @@ function BikesList({ bikes }: Props) {
         { maxWidth: 600, cols: 1, spacing: 'sm' },
       ]}
     >
-      {bikes.map((bike: any, i: number) => (
-        <Card shadow="sm" padding="lg" key={i}>
-          <Card.Section sx={{ cursor: 'pointer' }}>
-            <Link href={`/bikes/${bike.id}`}>
-              <Box component="a">
-                <Image
-                  alt="Mountains"
-                  src={bike.img}
-                  layout="responsive"
-                  width={700}
-                  height={475}
-                />
-                {!bike.available && (
-                  <Badge
-                    color={bike.available ? 'cyan' : 'pink'}
-                    variant="light"
-                    sx={{ position: 'absolute', top: 20, right: 10, padding: 10 }}
-                  >
-                    Unavailable
-                  </Badge>
-                )}
-              </Box>
-            </Link>
-          </Card.Section>
-          <Group position="apart" style={{ marginBottom: 5, marginTop: theme.spacing.sm }}>
-            <Text weight={600}>{bike.title}</Text>
-          </Group>
+      {Array.isArray(bikes) &&
+        bikes.map((bike: any, i: number) => (
+          <Card shadow="sm" padding="lg" key={i}>
+            <Card.Section sx={{ cursor: 'pointer' }}>
+              <Link href={`/bikes/${bike.id}`}>
+                <Box component="a">
+                  <Image
+                    alt="Mountains"
+                    src={bike.imgUrl}
+                    layout="responsive"
+                    width={700}
+                    height={475}
+                    unoptimized
+                  />
+                  {!bike.available && (
+                    <Badge
+                      color={bike.available ? 'cyan' : 'pink'}
+                      variant="light"
+                      sx={{ position: 'absolute', top: 20, right: 10, padding: 10 }}
+                    >
+                      Unavailable
+                    </Badge>
+                  )}
+                </Box>
+              </Link>
+            </Card.Section>
+            <Group position="apart" style={{ marginBottom: 5, marginTop: theme.spacing.sm }}>
+              <Text weight={600}>{bike.title}</Text>
+            </Group>
 
-          <Group direction="row" position="apart" align="center" mt={10} mb={20}>
-            <Group direction="row" position="left" spacing={5}>
-              <Text size="sm" style={{ color: secondaryColor, lineHeight: 1.5 }} weight="bold">
-                {bike.rating}
-              </Text>
-              <Star style={{ height: 20, width: 20 }} />
-              <Text size="sm" style={{ color: secondaryColor, lineHeight: 1.5 }}>
-                ({bike.ratingCount} reviews)
-              </Text>
-            </Group>
-            <Group align="center">
-              <Text size="md" weight={600} style={{ color: secondaryColor }}>
-                120$
-                <Text component="span" size="sm" weight={400} style={{ color: secondaryColor }}>
-                  {' '}
-                  / day
+            <Group direction="row" position="apart" align="center" mt={10} mb={20}>
+              <Group direction="row" position="left" spacing={5}>
+                <Text size="sm" style={{ color: secondaryColor, lineHeight: 1.5 }} weight="bold">
+                  {bike.rating.rateAvg}
                 </Text>
-              </Text>
+                <Star style={{ height: 20, width: 20 }} />
+                <Text size="sm" style={{ color: secondaryColor, lineHeight: 1.5 }}>
+                  ({bike.rateCount} reviews)
+                </Text>
+              </Group>
+              <Group align="center">
+                <Text size="md" weight={600} style={{ color: secondaryColor }}>
+                  120$
+                  <Text component="span" size="sm" weight={400} style={{ color: secondaryColor }}>
+                    {' '}
+                    / day
+                  </Text>
+                </Text>
+              </Group>
             </Group>
-          </Group>
-          <Button
-            variant="light"
-            color="blue"
-            fullWidth
-            style={{ marginTop: 14, flexGrow: 1 }}
-            disabled={!bike.available}
-          >
-            Book now
-          </Button>
-        </Card>
-      ))}
+            <Button
+              variant="light"
+              color="blue"
+              fullWidth
+              style={{ marginTop: 14, flexGrow: 1 }}
+              disabled={!bike.available}
+            >
+              Book now
+            </Button>
+          </Card>
+        ))}
     </SimpleGrid>
   );
 }

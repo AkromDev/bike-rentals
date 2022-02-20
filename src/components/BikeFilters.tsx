@@ -1,35 +1,66 @@
-import { Box, Group, Select } from '@mantine/core';
+import { Box, Button, Group, Select } from '@mantine/core';
 import { DateRangePicker } from '@mantine/dates';
 import dayjs from 'dayjs';
-import { queryTypes, useQueryState, useQueryStates } from 'next-usequerystate';
-import React from 'react';
+import { queryTypes, useQueryStates } from 'next-usequerystate';
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
 
-export default function BikeFilters() {
+function getOptions(arr) {
+  const options = [{ value: '', label: 'All' }];
+  if (Array.isArray(arr)) {
+    arr.map((l) => options.push({ value: l, label: l }));
+  }
+
+  return options;
+}
+export default function BikeFilters(props) {
+  const { models, locations, colors } = props;
+  const router = useRouter();
   const [range, setRange] = useQueryStates({
     start: queryTypes.isoDateTime,
     end: queryTypes.isoDateTime,
   });
 
-  const [location, setLocation] = useQueryState('location');
-  const [color, setColor] = useQueryState('color');
-  const [model, setModel] = useQueryState('model');
-  const [rating, setRating] = useQueryState('rating');
+  const [location, setLocation] = useState('');
+  const [color, setColor] = useState('');
+  const [model, setModel] = useState('');
+  const [rating, setRating] = useState('');
 
+  const onApplyFilters = () => {
+    if (location) {
+      router.query.location = location;
+    } else {
+      delete router.query.location;
+    }
+    if (color) {
+      router.query.color = color;
+    } else {
+      delete router.query.color;
+    }
+    if (model) {
+      router.query.model = model;
+    } else {
+      delete router.query.model;
+    }
+
+    router.push(router);
+  };
+
+  const resetFilters = () => {
+    setLocation('');
+    setColor('');
+    setModel('');
+    router.push('/bikes');
+  };
   return (
     <Box sx={{ maxWidth: 600 }}>
       <Group>
         <Select
           label="Location"
           placeholder="Pick location"
-          data={[
-            { value: '', label: 'All' },
-            { value: 'seoul', label: 'Seoul' },
-            { value: 'busan', label: 'Busan' },
-            { value: 'gwangju', label: 'Gwangju' },
-            { value: 'degu', label: 'Degu' },
-          ]}
+          data={getOptions(locations)}
           value={location}
-          onChange={(val) => setLocation(val || null)}
+          onChange={(val) => setLocation(val)}
         />
         <DateRangePicker
           label="From - To"
@@ -46,13 +77,7 @@ export default function BikeFilters() {
           sx={{ flex: 1 }}
           label="Model"
           placeholder="Pick model"
-          data={[
-            { value: '', label: 'All' },
-            { value: 'seoul', label: 'Seoul' },
-            { value: 'busan', label: 'Busan' },
-            { value: 'gwangju', label: 'Gwangju' },
-            { value: 'degu', label: 'Degu' },
-          ]}
+          data={getOptions(models)}
           value={model}
           onChange={(v) => setModel(v || null)}
         />
@@ -62,13 +87,7 @@ export default function BikeFilters() {
           placeholder="Pick color"
           value={color}
           onChange={(v) => setColor(v || null)}
-          data={[
-            { value: '', label: 'All' },
-            { value: 'seoul', label: 'Seoul' },
-            { value: 'busan', label: 'Busan' },
-            { value: 'gwangju', label: 'Gwangju' },
-            { value: 'degu', label: 'Degu' },
-          ]}
+          data={getOptions(colors)}
         />
         <Select
           sx={{ flex: 1 }}
@@ -85,6 +104,12 @@ export default function BikeFilters() {
             { value: '5', label: '5' },
           ]}
         />
+      </Group>
+      <Group mt={30}>
+        <Button variant="outline" color="red" onClick={resetFilters}>
+          Reset filters
+        </Button>
+        <Button onClick={onApplyFilters}>Apply filters</Button>
       </Group>
     </Box>
   );
