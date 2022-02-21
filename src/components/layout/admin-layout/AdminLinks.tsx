@@ -44,7 +44,7 @@ function AdminLink({ icon, color, label, link }: AdminLinkProps) {
 }
 
 const data = [
-  { icon: <ChecklistIcon />, color: 'violet', link: '/admin/reservations', label: 'Reservations' },
+  { icon: <ChecklistIcon />, color: 'violet', link: '/admin/bikes', label: 'Bikes' },
   { icon: <PersonIcon />, color: 'violet', link: '/admin/users', label: 'Users' },
   { icon: <PeopleIcon />, color: 'violet', link: '/admin/managers', label: 'Managers' },
   { icon: <HomeIcon />, color: 'violet', link: '/bikes', label: 'Home' },

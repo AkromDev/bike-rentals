@@ -1,6 +1,6 @@
 import admin from './nodeApp';
 
-export const getBikes = async (queries) => {
+export const getBikes = async (queries, fetchAll: boolean = false) => {
   const db = admin.firestore();
   let bikesRef = db.collection('bikes');
   const filtersRef = db.collection('filters');
@@ -8,7 +8,9 @@ export const getBikes = async (queries) => {
   // const modelsRef = db.collection('models');
   // const locationsRef = db.collection('locations');
 
-  bikesRef = bikesRef.where('available', '==', true);
+  if (!fetchAll) {
+    bikesRef = bikesRef.where('available', '==', true);
+  }
   if (queries.location) {
     bikesRef = bikesRef.where('location', '==', queries.location);
   }

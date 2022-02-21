@@ -46,7 +46,7 @@ function Header({ navbarOpened, toggleNavbar }: HeaderProps) {
               </Link>
             )}
             {AuthUser.email && (
-              <Link href="/admin/reservations">
+              <Link href="/admin/bikes">
                 <Anchor variant="text">Admin</Anchor>
               </Link>
             )}

@@ -5,7 +5,7 @@ import withAuthorizationSSR from 'utils/withAuthorizationSSR';
 export default function AdminIdex() {
   const router = useRouter();
   useEffect(() => {
-    router.replace('/admin/reservations');
+    router.replace('/admin/bikes');
   }, []);
   return null;
 }

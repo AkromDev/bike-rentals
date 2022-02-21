@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import axios from 'axios';
+import axios, { Method } from 'axios';
 
 export default function usePostRequestWithToken() {
   const auth = getAuth(getApp());
@@ -9,12 +9,15 @@ export default function usePostRequestWithToken() {
   const [loading, setLoading] = useState<boolean>(false);
 
   const postRequestWithToken = useCallback(
-    async (url: string, body: Record<string, any>) => {
+    async (url: string, data: Record<string, any>, method: Method = 'POST') => {
       setError(null);
       setLoading(true);
       try {
         const idToken = (await auth.currentUser?.getIdToken()) || '';
-        await axios.post(url, body, {
+        await axios({
+          url,
+          method,
+          data,
           headers: {
             Authorization: `Bearer ${idToken}`,
           },
