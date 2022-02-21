@@ -58,12 +58,12 @@ function BikesList({ bikes }: Props) {
                 </Text>
                 <Star style={{ height: 20, width: 20 }} />
                 <Text size="sm" style={{ color: secondaryColor, lineHeight: 1.5 }}>
-                  ({bike.rateCount} reviews)
+                  ({bike.rating.rateCount} ratings)
                 </Text>
               </Group>
               <Group align="center">
                 <Text size="md" weight={600} style={{ color: secondaryColor }}>
-                  120$
+                  {bike.priceInUSD}$
                   <Text component="span" size="sm" weight={400} style={{ color: secondaryColor }}>
                     {' '}
                     / day

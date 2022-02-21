@@ -5,6 +5,9 @@ import { NotificationsProvider } from '@mantine/notifications';
 import '../global.css';
 
 import initAuth from 'utils/initAuth';
+import dynamic from 'next/dynamic';
+
+const ProgressBar = dynamic(() => import('src/components/ProgessBar'), { ssr: false });
 
 initAuth();
 
@@ -36,6 +39,7 @@ export default function App(props: AppProps) {
           <Component {...pageProps} />
         </NotificationsProvider>
       </MantineProvider>
+      <ProgressBar />
     </>
   );
 }

@@ -1,9 +1,9 @@
-import { Box, Button, Group, Select } from '@mantine/core';
+import { Badge, Box, Button, Group, Select, Text, Title } from '@mantine/core';
 import { DateRangePicker } from '@mantine/dates';
 import dayjs from 'dayjs';
 import { queryTypes, useQueryStates } from 'next-usequerystate';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 function getOptions(arr) {
   const options = [{ value: '', label: 'All' }];
@@ -14,8 +14,9 @@ function getOptions(arr) {
   return options;
 }
 export default function BikeFilters(props) {
-  const { models, locations, colors } = props;
+  const { models, locations, colors, bikesLength } = props;
   const router = useRouter();
+  const { query } = router;
   const [range, setRange] = useQueryStates({
     start: queryTypes.isoDateTime,
     end: queryTypes.isoDateTime,
@@ -25,6 +26,18 @@ export default function BikeFilters(props) {
   const [color, setColor] = useState('');
   const [model, setModel] = useState('');
   const [rating, setRating] = useState('');
+
+  useEffect(() => {
+    if (query.color) {
+      setColor(query.color);
+    }
+    if (query.location) {
+      setLocation(query.location);
+    }
+    if (query.model) {
+      setModel(query.model);
+    }
+  }, [query]);
 
   const onApplyFilters = () => {
     if (location) {
@@ -79,14 +92,14 @@ export default function BikeFilters(props) {
           placeholder="Pick model"
           data={getOptions(models)}
           value={model}
-          onChange={(v) => setModel(v || null)}
+          onChange={(v) => setModel(v)}
         />
         <Select
           sx={{ flex: 1 }}
           label="Color"
           placeholder="Pick color"
           value={color}
-          onChange={(v) => setColor(v || null)}
+          onChange={(v) => setColor(v)}
           data={getOptions(colors)}
         />
         <Select
@@ -94,7 +107,7 @@ export default function BikeFilters(props) {
           label="Rate"
           placeholder="Pick rate"
           value={rating}
-          onChange={(v) => setRating(v || null)}
+          onChange={(v) => setRating(v)}
           data={[
             { value: '', label: 'All' },
             { value: '1', label: '1' },
@@ -111,6 +124,16 @@ export default function BikeFilters(props) {
         </Button>
         <Button onClick={onApplyFilters}>Apply filters</Button>
       </Group>
+      {bikesLength === 0 && Object.keys(query).length > 0 && (
+        <Group mt={30}>
+          <Text size="lg">No bikes found for these filters</Text>
+          <Group>
+            {query.location && <Badge color="blue">{query.location}</Badge>}
+            {query.color && <Badge color="cyan">{query.color}</Badge>}
+            {query.model && <Badge color="pink">{query.model}</Badge>}
+          </Group>
+        </Group>
+      )}
     </Box>
   );
 }
