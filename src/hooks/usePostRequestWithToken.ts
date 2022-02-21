@@ -3,7 +3,7 @@ import { getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import axios, { Method } from 'axios';
 
-export default function usePostRequestWithToken() {
+export default function usePostRequestWithToken(addUserId = false) {
   const auth = getAuth(getApp());
   const [error, setError] = useState<Record<string, any> | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -13,11 +13,11 @@ export default function usePostRequestWithToken() {
       setError(null);
       setLoading(true);
       try {
-        const idToken = (await auth.currentUser?.getIdToken()) || '';
+        const idToken = await auth.currentUser?.getIdToken();
         await axios({
           url,
           method,
-          data,
+          data: addUserId ? { ...data, userId: auth.currentUser?.uid } : data,
           headers: {
             Authorization: `Bearer ${idToken}`,
           },

@@ -1,47 +1,56 @@
 import { Method } from 'axios';
+import dayjs from 'dayjs';
 import * as admin from 'firebase-admin';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getBikes } from 'src/firebase/getBikes';
 import initAuth from 'src/firebase/initAuth';
 import handleFirebaseError from 'src/firebase/utils/handleFirebaseError';
 import { invalidHTTPMethod, withAuthUserTokenAPI } from 'utils';
 
 initAuth();
 
-const bikesHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+const reservationHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const method: Method | undefined = req.method as Method | undefined;
   if (method === 'GET') {
-    try {
-      const data = await getBikes({}, true);
-      return res.status(200).send(data);
-    } catch (err: any) {
-      return handleFirebaseError(res, err);
-    }
+    // try {
+    //   const { userId } = req.query;
+    //   const bikesRef = admin.firestore().collection('users').doc(userId);
+
+    //   return res.status(200).send(data);
+    // } catch (err: any) {
+    //   return handleFirebaseError(res, err);
+    // }
   } else if (method === 'POST') {
     try {
-      const { model, color, location, imgUrl, priceInUSD, available = false } = req.body;
+      const { userId, bikeId, startDate, endDate, paymentAmount } = req.body;
 
-      if (!model || !color || !location || !imgUrl) {
+      if (!userId || !bikeId) {
         return res.status(400).send({ message: 'Missing fields' });
       }
 
-      await admin
-        .firestore()
-        .collection('bikes')
-        .add({
-          model,
-          color,
-          location,
-          imgUrl,
-          priceInUSD,
-          available,
-          rating: {
-            rateAvg: 0,
-            rateCount: 0,
-          },
-        });
+      if (!dayjs(startDate).isValid() || !dayjs(endDate).isValid()) {
+        return res.status(400).send({ message: 'Reservation range is invalid' });
+      }
+
+      if (!(paymentAmount > 0)) {
+        return res.status(400).send({ message: 'Invalid payment amount' });
+      }
+      const userReservations = admin.firestore().collection(`users/${userId}/reservations`);
+      const bikeReservations = admin.firestore().collection(`bikes/${bikeId}/reservations`);
+
+      const reservation = {
+        userId,
+        bikeId,
+        startDate,
+        endDate,
+        status: 'RESERVED',
+      };
+
+      await userReservations.add(reservation);
+      await bikeReservations.add(reservation);
+
       return res.status(201).send({ success: true });
     } catch (err: any) {
+      console.log('reservation err', err);
       return handleFirebaseError(res, err);
     }
   } else if (method === 'PUT') {
@@ -85,4 +94,4 @@ const bikesHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   return invalidHTTPMethod(res, req.method);
 };
 
-export default withAuthUserTokenAPI(bikesHandler);
+export default withAuthUserTokenAPI(reservationHandler);

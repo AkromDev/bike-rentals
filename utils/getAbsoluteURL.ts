@@ -1,6 +1,6 @@
 /* globals window */
 
-const getAbsoluteURL = (url: string, req: any = null) => {
+export const getAbsoluteURL = (url: string, req: any = null) => {
   let host;
   if (req) {
     host = req.headers.host;
@@ -14,5 +14,3 @@ const getAbsoluteURL = (url: string, req: any = null) => {
   const protocol = isLocalhost ? 'http' : 'https';
   return `${protocol}://${host}${url}`;
 };
-
-export default getAbsoluteURL;

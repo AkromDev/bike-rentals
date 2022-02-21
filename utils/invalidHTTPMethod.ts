@@ -2,7 +2,7 @@ import { NextApiResponse } from 'next';
 
 const _msg = 'Request failed with status 500';
 
-export default function invalidHTTPMethod(
+export function invalidHTTPMethod(
   res: NextApiResponse,
   method = 'GET',
   status: number = 404

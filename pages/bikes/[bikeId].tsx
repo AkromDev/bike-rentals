@@ -1,5 +1,6 @@
 import { Badge, Card, CardSection, Container, Group, Text, Title } from '@mantine/core';
 import { GetServerSideProps } from 'next';
+import { AuthAction, withAuthUser } from 'next-firebase-auth';
 import Image from 'next/image';
 import React, { ReactNode } from 'react';
 import MainLayout from 'src/components/layout/main-layout';
@@ -7,7 +8,7 @@ import { getBike } from 'src/firebase/getBike';
 import { RentForm } from 'src/templates/RentForm';
 import Star from '../../public/star.svg';
 
-export default function Bike({ bike }) {
+function Bike({ bike }) {
   if (!bike) {
     return (
       <Container>
@@ -86,3 +87,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 Bike.getLayout = function getLayout(page: ReactNode) {
   return <MainLayout>{page}</MainLayout>;
 };
+
+export default withAuthUser<any>({
+  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
+  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+})(Bike);

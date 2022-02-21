@@ -19,7 +19,7 @@ export interface AuthenticatedNextApiRequest extends NextApiRequest {
  * @param {*} handler
  * @returns Wrapped handler method that is used by NextJS.
  */
-const withAuthUserTokenAPI: <T extends unknown>(
+export const withAuthUserTokenAPI: <T extends unknown>(
   handler: (authReq: AuthenticatedNextApiRequest, res: NextApiResponse<T>) => void,
   adminOnly?: boolean
 ) => (req: NextApiRequest, res: NextApiResponse) => void =
@@ -51,5 +51,3 @@ const withAuthUserTokenAPI: <T extends unknown>(
       res.status(401).send({ message: 'Unauthorized', code: 3 });
     }
   };
-
-export default withAuthUserTokenAPI;

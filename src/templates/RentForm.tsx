@@ -19,6 +19,9 @@ import dayjs from 'dayjs';
 import React, { useState } from 'react';
 
 import relativeTime from 'dayjs/plugin/relativeTime';
+import usePostRequestWithToken from 'src/hooks/usePostRequestWithToken';
+import { useNotifications } from '@mantine/notifications';
+import { useRouter } from 'next/router';
 
 dayjs.extend(relativeTime);
 
@@ -30,25 +33,38 @@ export interface RentFormProps {
 }
 
 export function RentForm({ style, bike }: RentFormProps) {
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState<string | null>(null);
+  // const [loading, setLoading] = useState(false);
   const [range, setRange] = useState<[Date | null, Date | null]>([null, null]);
   const theme = useMantineTheme();
 
   const pickupDay = range[0] ? dayjs(range[0]).format('MMMM DD,YYYY') : null;
   const returnDay = range[1] ? dayjs(range[1]).format('MMMM DD,YYYY') : null;
-  const days = range[0] && range[1] ? dayjs(range[1]).from(range[0], true) : null;
+  const days = range[0] && range[1] ? dayjs(range[1]).diff(range[0], 'days') : null;
+  const { postRequestWithToken, loading, error } = usePostRequestWithToken(true);
+  const notificaton = useNotifications();
+  const router = useRouter();
 
-  const dayCount = days?.split('')[0] || 0;
   const onSubmit = () => {
-    setError(null);
-    setLoading(true);
+      postRequestWithToken('/api/reservations', {
+        bikeId: bike.id,
+        startDate: range[0],
+        endDate: range[1],
+        paymentAmount: 203,
+      })
+        .then(() => {
+          notificaton.showNotification({
+            title: 'Success',
+            message: 'Successfully reserved',
+          });
 
-    setTimeout(() => {
-      setLoading(false);
-      setError('Booking failed');
-    }, 2000);
+          router.replace('/bikes');
+        })
+        .catch((err) => {
+          console.log('errrr', err);
+        });
   };
+  const totalPrices = Number(bike.priceInUSD || 0) * Number(days);
   return (
     <Paper
       padding="lg"
@@ -101,7 +117,7 @@ export function RentForm({ style, bike }: RentFormProps) {
           <Group spacing={5}>
             <Icon icon={dollarCircleOutlined} />
             <Text>
-              Total Price {Number(bike.priceInUSD || 0) * dayCount}$ ({days || '0 days'})
+              Total Price ${totalPrices} ({days || '0 days'})
             </Text>
           </Group>
           <Group spacing={5}>
@@ -115,7 +131,7 @@ export function RentForm({ style, bike }: RentFormProps) {
         </Group>
         {error && (
           <Text color="red" size="sm" mt="sm">
-            {error}
+            {error?.message || 'Reservation failed'}
           </Text>
         )}
 

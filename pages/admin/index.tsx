@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import withAuthorizationSSR from 'utils/withAuthorizationSSR';
+import { withAuthorizationSSR } from 'utils';
 
 export default function AdminIdex() {
   const router = useRouter();

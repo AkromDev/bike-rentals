@@ -12,7 +12,7 @@ export const getBike = async (bikeId: string) => {
 
   try {
     const snapshot = await bikesRef.doc(bikeId).get();
-    const bike = snapshot.data();
+    const bike = { ...snapshot.data(), id: snapshot.id };
 
     return bike;
   } catch (err) {

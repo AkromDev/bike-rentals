@@ -1,10 +1,10 @@
 import * as admin from 'firebase-admin';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { AuthError } from 'firebase/auth';
-import withAuthUserTokenAPI from 'utils/withAuthUserTokenAPI';
 import { firebaseErrorMessages } from 'src/firebase/utils/firebaseErrorMessages';
 import populateFirebaseUser from 'src/firebase/utils/populateFirebaseUser';
 import initAuth from 'src/firebase/initAuth';
+import { withAuthUserTokenAPI } from 'utils';
 
 initAuth();
 
