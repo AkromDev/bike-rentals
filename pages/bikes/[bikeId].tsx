@@ -1,18 +1,15 @@
 import { Badge, Card, CardSection, Container, Group, Text, Title } from '@mantine/core';
+import { GetServerSideProps } from 'next';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react';
 import MainLayout from 'src/components/layout/main-layout';
 import { RentForm } from 'src/components/RentForm';
 import bikesJson from 'src/data/bikes.json';
+import { getBike } from 'src/firebase/getBike';
 import Star from '../../public/star.svg';
 
-export default function Bike() {
-  const router = useRouter();
-  const {
-    query: { bikeId },
-  } = router;
-  const bike = bikeId && bikesJson.data.find((b) => String(b.id) === bikeId);
+export default function Bike({ bike }) {
   if (!bike) {
     return (
       <Container>
@@ -42,38 +39,51 @@ export default function Bike() {
       >
         <Card sx={{ flex: 1 }} shadow="xl">
           <Group>
-            <Title>{bike.title}</Title>
+            <Title>{bike.model}</Title>
           </Group>
           <Group mb={15} mt={10}>
             <Group align="center" spacing={5}>
               <Star style={{ height: 25 }} />
               <Text weight="bold" sx={{ lineHeight: '25px' }}>
-                {bike.rating}
+                {bike.rating?.rateAvg}
               </Text>
             </Group>
-            <Badge color="cyan" variant="light">
-              {bike.model}
-            </Badge>
             <Badge color="pink" variant="light">
               {bike.color}
             </Badge>
           </Group>
           <CardSection>
-            <Image
-              src={bike.img}
-              layout="responsive"
-              width={500}
-              height={400}
-              objectFit="cover"
-              quality={100}
-            />
+            {bike.imgUrl && (
+              <Image
+                src={bike.imgUrl}
+                layout="responsive"
+                width={500}
+                height={400}
+                objectFit="cover"
+                unoptimized
+              />
+            )}
           </CardSection>
         </Card>
-        <RentForm />
+        <RentForm bike={bike} />
       </Group>
     </Container>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { query } = context;
+  const { bikeId } = query;
+  const bike = await getBike(bikeId);
+  console.log({ bikess: bike });
+  console.log({ bikeId });
+
+  return {
+    props: {
+      bike,
+    }, // will be passed to the page component as props
+  };
+};
 
 Bike.getLayout = function getLayout(page: ReactNode) {
   return <MainLayout>{page}</MainLayout>;

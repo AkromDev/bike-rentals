@@ -20,7 +20,7 @@ export const getBikes = async (queries) => {
   }
   try {
     const snapshot = await bikesRef.get();
-    const bikes = snapshot.docs.map((doc) => doc.data());
+    const bikes = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
 
     // const colorsSnapshot = await colorsRef.get();
     // const colors = colorsSnapshot.docs.map((doc) => doc.data());

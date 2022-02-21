@@ -29,7 +29,7 @@ export interface RentFormProps {
   style?: React.CSSProperties;
 }
 
-export function RentForm({ style }: RentFormProps) {
+export function RentForm({ style, bike }: RentFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [range, setRange] = useState<[Date | null, Date | null]>([null, null]);
@@ -38,6 +38,8 @@ export function RentForm({ style }: RentFormProps) {
   const pickupDay = range[0] ? dayjs(range[0]).format('MMMM DD,YYYY') : null;
   const returnDay = range[1] ? dayjs(range[1]).format('MMMM DD,YYYY') : null;
   const days = range[0] && range[1] ? dayjs(range[1]).from(range[0], true) : null;
+
+  const dayCount = days?.split('')[0] || 0;
   const onSubmit = () => {
     setError(null);
     setLoading(true);
@@ -98,7 +100,9 @@ export function RentForm({ style }: RentFormProps) {
           </Group>
           <Group spacing={5}>
             <Icon icon={dollarCircleOutlined} />
-            <Text>Total Price 349$ ({days})</Text>
+            <Text>
+              Total Price {Number(bike.priceInUSD || 0) * dayCount}$ ({days || '0 days'})
+            </Text>
           </Group>
           <Group spacing={5}>
             <Icon icon={infoCircleOutlined} />
