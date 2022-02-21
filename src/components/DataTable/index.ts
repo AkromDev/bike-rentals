@@ -1,2 +1,2 @@
 export { DataTable } from './DataTable';
-export * from './Filters';
+export * from './filters';

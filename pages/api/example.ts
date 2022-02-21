@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { verifyIdToken } from 'next-firebase-auth';
-import initAuth from '../../utils/initAuth';
+import initAuth from 'src/firebase/initAuth';
 
 initAuth();
 

@@ -1,14 +1,14 @@
-import { Badge, Container, Group, Space, Text, Title } from '@mantine/core';
+import { Container, Space, Text, Title } from '@mantine/core';
 import { GetServerSideProps } from 'next';
 import { ReactNode } from 'react';
-import BikeFilters from 'src/components/BikeFilters';
-import BikesList from 'src/components/BikesList';
 import MainLayout from 'src/components/layout/main-layout';
 import { getBikes } from 'src/firebase/getBikes';
+import BikeFilters from 'src/templates/BikeFilters';
+import BikesList from 'src/templates/BikesList';
 
 export default function Bikes({ data = {} }) {
   const { bikes, filters } = data || {};
-  const filterNames = Object.keys(filters);
+
   return (
     <Container sx={{ paddingBottom: 100 }}>
       <Title sx={{ fontSize: 100, fontWeight: 900, letterSpacing: -2 }} align="center" mt={100}>

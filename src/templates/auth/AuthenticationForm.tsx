@@ -5,7 +5,6 @@ import {
   TextInput,
   PasswordInput,
   Group,
-  Checkbox,
   Button,
   Paper,
   Text,
@@ -15,7 +14,7 @@ import {
 } from '@mantine/core';
 import { getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { firebaseErrorMessages } from 'src/constants/firebaseErrorMessages';
+import { firebaseErrorMessages } from 'src/firebase/utils/firebaseErrorMessages';
 import useSignUp from './hooks/useSignUp';
 import useSignIn from './hooks/useSignIn';
 

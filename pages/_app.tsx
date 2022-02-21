@@ -4,8 +4,8 @@ import { MantineProvider, NormalizeCSS, GlobalStyles } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
 import '../global.css';
 
-import initAuth from 'utils/initAuth';
 import dynamic from 'next/dynamic';
+import initAuth from 'src/firebase/initAuth';
 
 const ProgressBar = dynamic(() => import('src/components/ProgessBar'), { ssr: false });
 

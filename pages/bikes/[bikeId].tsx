@@ -1,12 +1,10 @@
 import { Badge, Card, CardSection, Container, Group, Text, Title } from '@mantine/core';
 import { GetServerSideProps } from 'next';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react';
 import MainLayout from 'src/components/layout/main-layout';
-import { RentForm } from 'src/components/RentForm';
-import bikesJson from 'src/data/bikes.json';
 import { getBike } from 'src/firebase/getBike';
+import { RentForm } from 'src/templates/RentForm';
 import Star from '../../public/star.svg';
 
 export default function Bike({ bike }) {

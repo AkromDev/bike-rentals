@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import { AppShell, Navbar, Header, Text, MediaQuery, Burger, useMantineTheme } from '@mantine/core';
-import Head from 'src/components/Head/Head';
+import Head from 'src/components/head/Head';
 import { useRouter } from 'next/router';
 import AdminLinks from './AdminLinks';
 import Admin from './Admin';

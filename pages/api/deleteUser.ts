@@ -1,8 +1,8 @@
 import * as admin from 'firebase-admin';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import handleFirebaseError from 'utils/handleFirebaseError';
+import handleFirebaseError from 'src/firebase/utils/handleFirebaseError';
 import withAuthUserTokenAPI from 'utils/withAuthUserTokenAPI';
-import initAuth from '../../utils/initAuth';
+import initAuth from 'src/firebase/initAuth';
 
 initAuth();
 

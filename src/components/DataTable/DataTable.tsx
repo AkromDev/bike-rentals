@@ -28,7 +28,7 @@ import { Icon } from '@iconify/react';
 import arrowUpDown from '@iconify/icons-akar-icons/arrow-up-down';
 
 import filterTypes from './filterTypes';
-import { StringFilter } from './Filters';
+import { StringFilter } from './filters';
 
 const pageSizeOptions = ['10', '25', '50', '100'];
 

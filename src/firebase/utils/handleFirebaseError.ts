@@ -1,6 +1,6 @@
 import { NextApiResponse } from 'next';
-import { firebaseErrorMessages } from 'src/constants/firebaseErrorMessages';
 import { AuthError } from 'firebase/auth';
+import { firebaseErrorMessages } from './firebaseErrorMessages';
 
 const _msg = 'Request failed with status 500';
 

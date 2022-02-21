@@ -1,6 +1,6 @@
 import { Container } from '@mantine/core';
 import { ReactNode } from 'react';
-import AuthenticationForm from 'src/components/Auth/AuthenticationForm';
+import AuthenticationForm from 'src/templates/auth/AuthenticationForm';
 import MainLayout from 'src/components/layout/main-layout';
 import { withAuthUser, AuthAction, withAuthUserTokenSSR } from 'next-firebase-auth';
 
