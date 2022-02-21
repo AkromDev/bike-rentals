@@ -17,10 +17,7 @@ export default function BikeFilters(props) {
   const { models, locations, colors, bikesLength } = props;
   const router = useRouter();
   const { query } = router;
-  const [range, setRange] = useQueryStates({
-    start: queryTypes.isoDateTime,
-    end: queryTypes.isoDateTime,
-  });
+  const [range, setRange] = useState([null, null]);
 
   const [location, setLocation] = useState('');
   const [color, setColor] = useState('');
@@ -37,6 +34,12 @@ export default function BikeFilters(props) {
     if (query.model) {
       setModel(query.model);
     }
+    const start = new Date(query.start);
+    const end = new Date(query.end);
+
+    if (dayjs(start).isValid() && dayjs(end).isValid()) {
+      setRange([start, end]);
+    }
   }, [query]);
 
   const onApplyFilters = () => {
@@ -44,6 +47,21 @@ export default function BikeFilters(props) {
       router.query.location = location;
     } else {
       delete router.query.location;
+    }
+    if (color) {
+      router.query.color = color;
+    } else {
+      delete router.query.color;
+    }
+    if (dayjs(range[0]).isValid()) {
+      router.query.start = dayjs(range[0]).toISOString();
+    } else {
+      delete router.query.start;
+    }
+    if (dayjs(range[1]).isValid()) {
+      router.query.end = dayjs(range[1]).toISOString();
+    } else {
+      delete router.query.end;
     }
     if (color) {
       router.query.color = color;
@@ -78,8 +96,8 @@ export default function BikeFilters(props) {
         <DateRangePicker
           label="From - To"
           placeholder="Pick dates range"
-          value={[range.start, range.end]}
-          onChange={([start, end]) => setRange({ start, end })}
+          value={range}
+          onChange={setRange}
           minDate={dayjs(new Date()).add(1, 'days').toDate()}
           maxDate={dayjs(new Date()).add(10, 'months').toDate()}
           sx={{ flex: 1 }}

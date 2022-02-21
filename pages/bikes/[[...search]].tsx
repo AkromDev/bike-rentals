@@ -37,9 +37,8 @@ export default function Bikes({ data = {} }) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { query } = context;
   const { host } = context.req.headers;
-  const { location, color, model } = query;
-  const data = await getBikes({ location, color, model });
-
+  const { location, color, model, start, end } = query;
+  const data = await getBikes({ location, color, model, start, end });
   return {
     props: {
       data,

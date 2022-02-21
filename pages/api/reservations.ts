@@ -34,19 +34,20 @@ const reservationHandler = async (req: NextApiRequest, res: NextApiResponse) => 
       if (!(paymentAmount > 0)) {
         return res.status(400).send({ message: 'Invalid payment amount' });
       }
-      const userReservations = admin.firestore().collection(`users/${userId}/reservations`);
-      const bikeReservations = admin.firestore().collection(`bikes/${bikeId}/reservations`);
+      const reservationsRef = admin.firestore().collection('reservations');
 
       const reservation = {
         userId,
         bikeId,
+        // startDate: admin.firestore.Timestamp.fromDate(dayjs(startDate).toDate()).toDate(),
+        // endDate: admin.firestore.Timestamp.fromDate(dayjs(endDate).toDate()).toDate(),
         startDate,
         endDate,
         status: 'RESERVED',
+        createdAt: admin.firestore.Timestamp.fromDate(new Date()).toDate(),
       };
 
-      await userReservations.add(reservation);
-      await bikeReservations.add(reservation);
+      await reservationsRef.add(reservation);
 
       return res.status(201).send({ success: true });
     } catch (err: any) {

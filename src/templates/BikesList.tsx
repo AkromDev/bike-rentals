@@ -71,15 +71,17 @@ function BikesList({ bikes }: Props) {
                 </Text>
               </Group>
             </Group>
-            <Button
-              variant="light"
-              color="blue"
-              fullWidth
-              style={{ marginTop: 14, flexGrow: 1 }}
-              disabled={!bike.available}
-            >
-              Book now
-            </Button>
+            <Link href={`/bikes/${bike.id}`}>
+              <Button
+                variant="light"
+                color="blue"
+                fullWidth
+                style={{ marginTop: 14, flexGrow: 1 }}
+                component="a"
+              >
+                Book now
+              </Button>
+            </Link>
           </Card>
         ))}
     </SimpleGrid>

@@ -74,8 +74,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { query } = context;
   const { bikeId } = query;
   const bike = await getBike(bikeId);
-  console.log({ bikess: bike });
-  console.log({ bikeId });
 
   return {
     props: {

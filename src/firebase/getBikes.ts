@@ -1,13 +1,21 @@
+import dayjs from 'dayjs';
 import admin from './nodeApp';
 
 export const getBikes = async (queries, fetchAll: boolean = false) => {
   const db = admin.firestore();
   let bikesRef = db.collection('bikes');
   const filtersRef = db.collection('filters');
-  // const colorsRef = db.collection('colors');
-  // const modelsRef = db.collection('models');
-  // const locationsRef = db.collection('locations');
+  const reservationsRef = db.collection('reservations');
 
+  if (
+    queries.start &&
+    queries.end &&
+    !dayjs(queries.start).isValid() &&
+    !dayjs(queries.end).isValid()
+  ) {
+    console.log('invalid adte');
+    return null;
+  }
   if (!fetchAll) {
     bikesRef = bikesRef.where('available', '==', true);
   }
@@ -22,16 +30,26 @@ export const getBikes = async (queries, fetchAll: boolean = false) => {
   }
   try {
     const snapshot = await bikesRef.get();
-    const bikes = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-
-    // const colorsSnapshot = await colorsRef.get();
-    // const colors = colorsSnapshot.docs.map((doc) => doc.data());
-
-    // const modelSnapshot = await modelsRef.get();
-    // const models = modelSnapshot.docs.map((doc) => doc.data());
-
+    let bikes = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
     const filterSnapshot = await filtersRef.get();
     const filters = filterSnapshot.docs.map((doc) => doc.data());
+    const reservationsSnapshot = await reservationsRef.where('status', '==', 'RESERVED').get();
+    const reservations = reservationsSnapshot.docs.map(d => ({ ...d.data(), id: d.id }));
+
+    // console.log('1reservationsreservations', reservations);
+    if (reservations.length > 0) {
+      bikes = bikes.filter((bike) =>
+      reservations.every((res) => {
+        if (bike.id !== res.bikeId) {
+          return true;
+        }
+        const overlaping =
+          !dayjs(queries.start).isAfter(res.endDate) &&
+          !dayjs(queries.end).isBefore(res.startDate);
+        return !overlaping;
+      })
+      );
+    }
 
     return { bikes, filters: filters[0] };
   } catch (err) {

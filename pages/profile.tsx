@@ -1,8 +1,8 @@
-import React, { ReactNode } from 'react';
-import { useAuthUser, withAuthUser, withAuthUserTokenSSR, AuthAction } from 'next-firebase-auth';
-import { firestore } from 'firebase-admin';
-import { Badge, Box, Button, Container, Group, Paper, SimpleGrid, Text, Title } from '@mantine/core';
+import { Badge, Box, Button, Container, Group, Paper, Text, Title } from '@mantine/core';
 import dayjs from 'dayjs';
+import { firestore } from 'firebase-admin';
+import { AuthAction, useAuthUser, withAuthUser, withAuthUserTokenSSR } from 'next-firebase-auth';
+import React, { ReactNode } from 'react';
 import MainLayout from 'src/components/layout/main-layout';
 
 const Profile = ({ reservations }: any) => {
@@ -53,7 +53,7 @@ const hasReservations = Array.isArray(reservations) && reservations.length > 0;
                   <Text mt={5}>
                     Reserved date :{' '}
                     <Text component="span" color="gray">
-                      {dayjs(item.reservedDate).format('MMMM DD,YYYY')}
+                      {item.createdAt}
                     </Text>
                   </Text>
                 </Box>
@@ -80,9 +80,17 @@ export const getServerSideProps = withAuthUserTokenSSR({
 })(async ({ AuthUser, req }) => {
   const id = await AuthUser.id;
 
-  const reservationsRef = firestore().collection(`users/${id}/reservations`);
+  const reservationsRef = firestore().collection('reservations').where('userId', '==', id);
   const reservationsSnapshot = await reservationsRef.get();
-  const reservations = reservationsSnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+  const reservations = reservationsSnapshot.docs.map((doc) => {
+    const _createdAt = doc.data().createdAt as firestore.Timestamp;
+    const data = {
+      ...doc.data(),
+      id: doc.id,
+      createdAt: dayjs(_createdAt.toDate()).format('MMMM DD,YYYY'),
+    };
+    return data;
+  });
 
   return {
     props: {
