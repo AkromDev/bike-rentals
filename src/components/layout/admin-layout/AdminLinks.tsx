@@ -1,5 +1,5 @@
 import { createStyles, Group, Text, ThemeIcon } from '@mantine/core';
-import { ChecklistIcon, HomeIcon, PeopleIcon, PersonIcon } from '@primer/octicons-react';
+import { ChecklistIcon, HomeIcon, PersonIcon } from '@primer/octicons-react';
 import Link from 'next/link';
 import React from 'react';
 
@@ -25,7 +25,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function AdminLink({ icon, color, label, link }: AdminLinkProps) {
+function AdminLink({ icon, color, label, link, labelColor }: AdminLinkProps) {
   const { classes } = useStyles();
 
   return (
@@ -36,7 +36,9 @@ function AdminLink({ icon, color, label, link }: AdminLinkProps) {
             {icon}
           </ThemeIcon>
 
-          <Text size="sm">{label}</Text>
+          <Text size="sm" color={labelColor}>
+            {label}
+          </Text>
         </Group>
       </a>
     </Link>
@@ -45,9 +47,9 @@ function AdminLink({ icon, color, label, link }: AdminLinkProps) {
 
 const data = [
   { icon: <ChecklistIcon />, color: 'violet', link: '/admin/bikes', label: 'Bikes' },
+  { icon: <PersonIcon />, color: 'violet', link: '/admin/reservees', label: 'Reservees' },
   { icon: <PersonIcon />, color: 'violet', link: '/admin/users', label: 'Users' },
-  { icon: <PeopleIcon />, color: 'violet', link: '/admin/managers', label: 'Managers' },
-  { icon: <HomeIcon />, color: 'violet', link: '/bikes', label: 'Home' },
+  { icon: <HomeIcon />, color: 'red', link: '/bikes', label: 'Home', labelColor: 'pink' },
 ];
 
 export default function AdminLinks() {

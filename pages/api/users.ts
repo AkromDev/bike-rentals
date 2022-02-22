@@ -11,7 +11,9 @@ initAuth();
 const fetchUsers = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const listUsers = await admin.auth().listUsers();
-    const users = listUsers.users.map(populateFirebaseUser);
+    // const dbUsersSnapshot = await admin.firestore().collection('users').get();
+    // const dbUsers = dbUsersSnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+    const users = listUsers.users.map(user => populateFirebaseUser(user));
     return res.status(200).send({ users });
   } catch (err: any) {
     return handleError(res, err);

@@ -1,4 +1,4 @@
-import { Box, Button, Group, Modal } from '@mantine/core';
+import { Badge, Box, Button, Group, Modal, Text } from '@mantine/core';
 import { useNotifications } from '@mantine/notifications';
 import { CheckIcon, ReloadIcon } from '@modulz/radix-icons';
 import { XCircleFillIcon } from '@primer/octicons-react';
@@ -106,6 +106,28 @@ const UsersTable = () => {
             filter: 'includes',
             disableSortBy: true,
           },
+          // {
+          //   Header: () => (
+          //     <Box sx={{ position: 'relative', paddingBottom: 10 }}>
+          //       <div>Reservations</div>
+          //       <Badge sx={{ position: 'absolute', fontSize: 9 }} size="sm">
+          //         Active /{' '}
+          //         <Text component="span" color="red" sx={{ fontSize: 9 }}>
+          //           Total
+          //         </Text>
+          //       </Badge>
+          //     </Box>
+          //   ),
+          //   Filter: SelectFilter,
+          //   filter: 'includes',
+          //   accessor: 'totalResCount',
+          //   disableSortBy: true,
+          //   Cell: ({ cell }) => (
+          //       <Text size="sm" ml={5}>
+          //         {cell.row.original.activeResCount} / {cell.row.original.totalResCount}
+          //       </Text>
+          //     ),
+          // },
           {
             accessor: 'uid',
             Header: 'Actions',

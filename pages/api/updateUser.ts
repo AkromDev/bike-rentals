@@ -17,9 +17,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     await admin.auth().updateUser(id, { displayName, password, email });
     await admin.auth().setCustomUserClaims(id, { role });
-    const user = await admin.auth().getUser(id);
+    // const user = await admin.auth().getUser(id);
 
-    return res.status(204).send({ user: populateFirebaseUser(user) });
+    return res.status(204).send({ sucess: true });
   } catch (err: any) {
     return handleFirebaseError(res, err, 'Updating user failed');
   }
