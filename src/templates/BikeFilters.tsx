@@ -35,6 +35,10 @@ export default function BikeFilters(props) {
     if (query.model) {
       setModel(query.model);
     }
+    if (query.rating > 0 && query.rating < 6) {
+      const rating = Math.min(Math.ceil(Number(query.rating)), 5);
+      setRating(String(rating));
+    }
     const start = new Date(query.start);
     const end = new Date(query.end);
 
@@ -53,6 +57,11 @@ export default function BikeFilters(props) {
       router.query.color = color;
     } else {
       delete router.query.color;
+    }
+    if (rating) {
+      router.query.rating = rating;
+    } else {
+      delete router.query.rating;
     }
     if (dayjs(range[0]).isValid()) {
       router.query.start = dayjs(range[0]).toISOString();
@@ -82,10 +91,12 @@ export default function BikeFilters(props) {
     const { query } = router;
     delete query.location;
     delete query.color;
+    delete query.rating;
     delete query.model;
     setLocation('');
     setColor('');
     setModel('');
+    setRating('');
     router.push(router);
   };
 
@@ -144,7 +155,7 @@ export default function BikeFilters(props) {
         />
         <Select
           sx={{ flex: 1 }}
-          label="Rate"
+          label="Min rate"
           placeholder="Pick rate"
           value={rating}
           onChange={(v) => setRating(v)}

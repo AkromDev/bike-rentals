@@ -29,7 +29,7 @@ function BikesList({ bikes }: Props) {
             <Card.Section>
               <Box component="a">
                 <Image
-                  alt="Mountains"
+                  alt="Bike image"
                   src={bike.imgUrl}
                   layout="responsive"
                   width={700}

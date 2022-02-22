@@ -32,7 +32,7 @@ function Header({ navbarOpened, toggleNavbar }: HeaderProps) {
         </div>
         {!renderNavbar && (
           <Group className={classes.links} spacing="xs">
-            <Link href="/">
+            <Link href="/bikes">
               <Anchor variant="text">Home</Anchor>
             </Link>
             {!AuthUser.email && (

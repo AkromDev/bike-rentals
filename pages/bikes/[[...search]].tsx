@@ -37,7 +37,7 @@ export default function Bikes({ bikes = [], filters = {}, initial, invalid }) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { query } = context;
-  const { location, color, model, start, end } = query;
+  const { location, color, model, start, end, rating } = query;
 
   const filters = await getFilters();
 
@@ -57,10 +57,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
-  const data = await getBikes({ location, color, model, start, end });
+  const data = await getBikes({ location, color, model, start, end, rating });
   return {
     props: {
-      bikes: data.bikes,
+      bikes: data?.bikes || null,
       filters,
     },
   };

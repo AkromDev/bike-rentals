@@ -22,6 +22,10 @@ export const getBikes = async (queries, fetchAll: boolean = false) => {
   if (queries.location) {
     bikesRef = bikesRef.where('location', '==', queries.location);
   }
+  // if (queries.rating && !Number.isNaN(Number(queries.rating))) {
+  // bikesRef = bikesRef.where('rating.rateAvg', '>=', Number(queries.rating))
+  // did not work for some reason
+  // }
   if (queries.model) {
     bikesRef = bikesRef.where('model', '==', queries.model);
   }
@@ -33,21 +37,25 @@ export const getBikes = async (queries, fetchAll: boolean = false) => {
     let bikes = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
     const filters = await getFilters();
     const reservationsSnapshot = await reservationsRef.where('status', '==', 'RESERVED').get();
-    const reservations = reservationsSnapshot.docs.map(d => ({ ...d.data(), id: d.id }));
+    const reservations = reservationsSnapshot.docs.map((d) => ({ ...d.data(), id: d.id }));
 
     if (reservations.length > 0) {
       bikes = bikes.filter((bike) =>
-      reservations.every((res) => {
-        if (bike.id !== res.bikeId) {
-          return true;
-        }
+        reservations.every((res) => {
+          if (bike.id !== res.bikeId) {
+            return true;
+          }
 
-        const overlaping =
-          !dayjs(queries.start).isAfter(res.endDate) &&
-          !dayjs(queries.end).isBefore(res.startDate);
-        return !overlaping;
-      })
+          const overlaping =
+            !dayjs(queries.start).isAfter(res.endDate) &&
+            !dayjs(queries.end).isBefore(res.startDate);
+          return !overlaping;
+        })
       );
+    }
+    if (queries.rating && !Number.isNaN(Number(queries.rating))) {
+      console.log('filtering rate');
+      bikes = bikes.filter((bike) => bike.rating && bike.rating.rateAvg >= Number(queries.rating));
     }
 
     return { bikes, filters };

@@ -8,7 +8,7 @@ import useStyles from './Navbar.styles';
 
 const loggedinUsers = [
   {
-    to: '/',
+    to: '/bikes',
     label: 'Home',
     theme: DEFAULT_THEME.colors.blue[6],
     icon: HomeIcon,
@@ -23,7 +23,7 @@ const loggedinUsers = [
 
 const unLoggedUsers = [
   {
-    to: '/',
+    to: '/bikes',
     label: 'Home',
     theme: DEFAULT_THEME.colors.blue[6],
     icon: HomeIcon,
