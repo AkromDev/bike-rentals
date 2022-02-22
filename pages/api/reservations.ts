@@ -35,12 +35,13 @@ const reservationHandler = async (req: NextApiRequest, res: NextApiResponse) => 
         return res.status(400).send({ message: 'Invalid payment amount' });
       }
       const reservationsRef = admin.firestore().collection('reservations');
+      const userRef = admin.firestore().collection('users').doc(userId);
+      const userSnp = await userRef.get();
+      const { totalResCount = 0, activeResCount = 0 } = userSnp.data();
 
       const reservation = {
         userId,
         bikeId,
-        // startDate: admin.firestore.Timestamp.fromDate(dayjs(startDate).toDate()).toDate(),
-        // endDate: admin.firestore.Timestamp.fromDate(dayjs(endDate).toDate()).toDate(),
         startDate,
         endDate,
         status: 'RESERVED',
@@ -48,6 +49,10 @@ const reservationHandler = async (req: NextApiRequest, res: NextApiResponse) => 
       };
 
       await reservationsRef.add(reservation);
+      await userRef.update({
+        activeResCount: activeResCount + 1,
+        totalResCount: totalResCount + 1,
+      });
 
       return res.status(201).send({ success: true });
     } catch (err: any) {
@@ -56,38 +61,27 @@ const reservationHandler = async (req: NextApiRequest, res: NextApiResponse) => 
     }
   } else if (method === 'PUT') {
     try {
-      const { id, bike } = req.body;
-      const { model, color, location, imgUrl, priceInUSD, available = false } = bike;
+      const { userId, reservationId, nextStatus } = req.body;
 
-      if (!model || !color || !location || !imgUrl) {
-        return res.status(400).send({ message: 'Missing fields' });
+      if (!(['COMPLETED', 'CANCELLED'].includes(nextStatus))) {
+        return res.status(400).send({ message: `Invalid status: ${nextStatus}` });
       }
 
-      await admin.firestore().collection('bikes').doc(id).update({
-        model,
-        color,
-        location,
-        imgUrl,
-        priceInUSD,
-        available,
+      const userRef = admin.firestore().collection('users').doc(userId);
+      const userSnp = await userRef.get();
+      const { activeResCount = 0 } = userSnp.data();
+
+      await admin.firestore().collection('reservations').doc(reservationId).update({
+        status: nextStatus,
+      });
+
+      await userRef.update({
+        activeResCount: activeResCount - 1,
       });
 
       return res.status(201).send({ success: true });
     } catch (err: any) {
-      return handleFirebaseError(res, err);
-    }
-  } else if (method === 'DELETE') {
-    try {
-      const { id } = req.body;
-
-      if (!id) {
-        return res.status(400).send({ message: 'Id missing' });
-      }
-
-      await admin.firestore().collection('bikes').doc(id).delete();
-
-      return res.status(201).send({ success: true });
-    } catch (err: any) {
+      console.log('ducccing error');
       return handleFirebaseError(res, err);
     }
   }

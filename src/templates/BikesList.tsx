@@ -83,7 +83,6 @@ function BikesList({ bikes }: Props) {
             >
               Book now
             </Button>
-            {JSON.stringify(router.query.start)}
           </Card>
         ))}
     </SimpleGrid>

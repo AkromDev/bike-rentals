@@ -7,6 +7,7 @@ import { AuthAction, useAuthUser, withAuthUser } from 'next-firebase-auth';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { DataTable } from 'src/components/datatable';
+import SelectFilter from 'src/components/datatable/filters/SelectFilter';
 
 const ReserveesTable = () => {
   const [data, setData] = useState([]);
@@ -60,7 +61,7 @@ const ReserveesTable = () => {
       </Text>
       <DataTable
         columns={[
-          { accessor: 'status', Header: 'Status' },
+          { accessor: 'status', Header: 'Status', disableSortBy: true, Filter: SelectFilter, filter: 'includes' },
           {
             accessor: 'createdAt',
             Header: 'Reserved day',
