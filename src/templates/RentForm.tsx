@@ -14,14 +14,12 @@ import {
   Title,
   useMantineTheme,
 } from '@mantine/core';
-import { DateRangePicker } from '@mantine/dates';
-import dayjs from 'dayjs';
-import React, { useState } from 'react';
-
-import relativeTime from 'dayjs/plugin/relativeTime';
-import usePostRequestWithToken from 'src/hooks/usePostRequestWithToken';
 import { useNotifications } from '@mantine/notifications';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { useRouter } from 'next/router';
+import React, { useState } from 'react';
+import usePostRequestWithToken from 'src/hooks/usePostRequestWithToken';
 
 dayjs.extend(relativeTime);
 
@@ -32,24 +30,31 @@ export interface RentFormProps {
   style?: React.CSSProperties;
 }
 
+function formatDate(date) {
+ if (!date || !dayjs(date).isValid()) {
+   return 'Invalid date';
+ }
+
+ return dayjs(date).format('MMMM DD,YYYY');
+}
 export function RentForm({ style, bike }: RentFormProps) {
-  // const [error, setError] = useState<string | null>(null);
-  // const [loading, setLoading] = useState(false);
-  const [range, setRange] = useState<[Date | null, Date | null]>([null, null]);
   const theme = useMantineTheme();
 
-  const pickupDay = range[0] ? dayjs(range[0]).format('MMMM DD,YYYY') : null;
-  const returnDay = range[1] ? dayjs(range[1]).format('MMMM DD,YYYY') : null;
-  const days = range[0] && range[1] ? dayjs(range[1]).diff(range[0], 'days') : null;
   const { postRequestWithToken, loading, error } = usePostRequestWithToken(true);
   const notificaton = useNotifications();
   const router = useRouter();
+  const { start, end } = router.query;
+
+  const isRangeValid = dayjs(start).isValid() && dayjs(end).isValid()
+    && dayjs(start).isBefore(dayjs(end));
+
+  const days = isRangeValid ? dayjs(end).diff(start, 'days') : null;
 
   const onSubmit = () => {
       postRequestWithToken('/api/reservations', {
         bikeId: bike.id,
-        startDate: range[0],
-        endDate: range[1],
+        startDate: start,
+        endDate: end,
         paymentAmount: 203,
       })
         .then(() => {
@@ -58,7 +63,7 @@ export function RentForm({ style, bike }: RentFormProps) {
             message: 'Successfully reserved',
           });
 
-          router.replace('/bikes');
+          router.replace('/profile');
         })
         .catch((err) => {
           console.log('errrr', err);
@@ -79,32 +84,17 @@ export function RentForm({ style, bike }: RentFormProps) {
     >
       <Box>
         <LoadingOverlay visible={loading} />
-        <DateRangePicker
-          label="Rent period"
-          placeholder="Pick a range"
-          value={range}
-          onChange={(val) => setRange(val)}
-          minDate={dayjs(new Date()).add(1, 'days').toDate()}
-          maxDate={range[0] ? dayjs(range[0]).add(21, 'days').toDate() : undefined}
-          sx={{
-            flex: 1,
-            '.mantine-DateRangePicker-label': {
-              fontWeight: 500,
-              fontSize: 16,
-            },
-          }}
-        />
         <Group direction="column" spacing={7}>
           <Title mt={20} sx={{ fontSize: 25 }}>
             Summary
           </Title>
           <Group spacing={5}>
             <Icon icon={calendarTwotone} />
-            <Text>Pickup on {pickupDay}</Text>
+            <Text>Pickup on {formatDate(start)}</Text>
           </Group>
           <Group spacing={5}>
             <Icon icon={calendarTwotone} />
-            <Text>Return on {returnDay}</Text>
+            <Text>Return on {formatDate(end)}</Text>
           </Group>
           <Group spacing={5}>
             <Icon icon={environmentOutlined} />
@@ -117,7 +107,7 @@ export function RentForm({ style, bike }: RentFormProps) {
           <Group spacing={5}>
             <Icon icon={dollarCircleOutlined} />
             <Text>
-              Total Price ${totalPrices} ({days || '0 days'})
+              Total Price ${totalPrices} ({days || '0'} days)
             </Text>
           </Group>
           <Group spacing={5}>
@@ -141,7 +131,7 @@ export function RentForm({ style, bike }: RentFormProps) {
           fullWidth
           mt={30}
           type="submit"
-          disabled={range.some((d) => d === null)}
+          disabled={!isRangeValid}
           onClick={onSubmit}
         >
           Book

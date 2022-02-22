@@ -1,14 +1,14 @@
 import { Container, Space, Text, Title } from '@mantine/core';
+import dayjs from 'dayjs';
 import { GetServerSideProps } from 'next';
 import { ReactNode } from 'react';
 import MainLayout from 'src/components/layout/main-layout';
 import { getBikes } from 'src/firebase/getBikes';
+import { getFilters } from 'src/firebase/getFilters';
 import BikeFilters from 'src/templates/BikeFilters';
 import BikesList from 'src/templates/BikesList';
 
-export default function Bikes({ data = {} }) {
-  const { bikes, filters } = data || {};
-
+export default function Bikes({ bikes = [], filters = {}, initial, invalid }) {
   return (
     <Container sx={{ paddingBottom: 100 }}>
       <Title sx={{ fontSize: 100, fontWeight: 900, letterSpacing: -2 }} align="center" mt={100}>
@@ -24,10 +24,10 @@ export default function Bikes({ data = {} }) {
       </Title>
       <Space h="md" />
       <BikeFilters
-        models={filters?.models}
-        locations={filters?.locations}
-        colors={filters?.colors}
+        filters={filters}
         bikesLength={bikes?.length}
+        initial={initial}
+        invalid={invalid}
       />
       <BikesList bikes={bikes} />
     </Container>
@@ -36,14 +36,32 @@ export default function Bikes({ data = {} }) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { query } = context;
-  const { host } = context.req.headers;
   const { location, color, model, start, end } = query;
+
+  const filters = await getFilters();
+
+  if (!start && !end) {
+    return {
+      props: {
+        initial: true,
+        filters,
+      },
+    };
+  }
+  if (!dayjs(start).isValid() || !dayjs(end).isValid()) {
+    return {
+      props: {
+        invalid: true,
+        filters,
+      },
+    };
+  }
   const data = await getBikes({ location, color, model, start, end });
   return {
     props: {
-      data,
-      host,
-    }, // will be passed to the page component as props
+      bikes: data.bikes,
+      filters,
+    },
   };
 };
 

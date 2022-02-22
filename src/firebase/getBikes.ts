@@ -1,10 +1,10 @@
 import dayjs from 'dayjs';
+import { getFilters } from './getFilters';
 import admin from './nodeApp';
 
 export const getBikes = async (queries, fetchAll: boolean = false) => {
   const db = admin.firestore();
   let bikesRef = db.collection('bikes');
-  const filtersRef = db.collection('filters');
   const reservationsRef = db.collection('reservations');
 
   if (
@@ -31,8 +31,7 @@ export const getBikes = async (queries, fetchAll: boolean = false) => {
   try {
     const snapshot = await bikesRef.get();
     let bikes = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-    const filterSnapshot = await filtersRef.get();
-    const filters = filterSnapshot.docs.map((doc) => doc.data());
+    const filters = await getFilters();
     const reservationsSnapshot = await reservationsRef.where('status', '==', 'RESERVED').get();
     const reservations = reservationsSnapshot.docs.map(d => ({ ...d.data(), id: d.id }));
 

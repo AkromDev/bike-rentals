@@ -14,7 +14,8 @@ function getOptions(arr) {
   return options;
 }
 export default function BikeFilters(props) {
-  const { models, locations, colors, bikesLength } = props;
+  const { filters, bikesLength, initial, invalid } = props;
+  const { models, locations, colors } = filters || {};
   const router = useRouter();
   const { query } = router;
   const [range, setRange] = useState([null, null]);
@@ -78,21 +79,30 @@ export default function BikeFilters(props) {
   };
 
   const resetFilters = () => {
+    const { query } = router;
+    delete query.location;
+    delete query.color;
+    delete query.model;
     setLocation('');
     setColor('');
     setModel('');
-    router.push('/bikes');
+    router.push(router);
   };
+
   return (
     <Box sx={{ maxWidth: 600 }}>
-      <Group>
-        <Select
-          label="Location"
-          placeholder="Pick location"
-          data={getOptions(locations)}
-          value={location}
-          onChange={(val) => setLocation(val)}
-        />
+      {/* <Text mt={30} weight="bold" size="lg">Date range</Text> */}
+      {initial && (
+        <Text mt={20} mb={10} color="">
+          Please select range and search to see bikes
+        </Text>
+      )}
+      {invalid && (
+        <Text mt={20} mb={10} color="red">
+          Please select a valid date range
+        </Text>
+      )}
+      <Group align="flex-end">
         <DateRangePicker
           label="From - To"
           placeholder="Pick dates range"
@@ -102,8 +112,20 @@ export default function BikeFilters(props) {
           maxDate={dayjs(new Date()).add(10, 'months').toDate()}
           sx={{ flex: 1 }}
         />
+        <Button onClick={onApplyFilters}>Search bikes</Button>
       </Group>
-      <Group mt="lg">
+      <Text mt={30} weight="bold" size="lg">
+        Filters
+      </Text>
+      <Group mt="md">
+        <Select
+          sx={{ flex: 1 }}
+          label="Location"
+          placeholder="Pick location"
+          data={getOptions(locations)}
+          value={location}
+          onChange={(val) => setLocation(val)}
+        />
         <Select
           sx={{ flex: 1 }}
           label="Model"
@@ -142,16 +164,17 @@ export default function BikeFilters(props) {
         </Button>
         <Button onClick={onApplyFilters}>Apply filters</Button>
       </Group>
-      {bikesLength === 0 && Object.keys(query).length > 0 && (
-        <Group mt={30}>
-          <Text size="lg">No bikes found for these filters</Text>
-          <Group>
-            {query.location && <Badge color="blue">{query.location}</Badge>}
-            {query.color && <Badge color="cyan">{query.color}</Badge>}
-            {query.model && <Badge color="pink">{query.model}</Badge>}
+      {bikesLength === 0 &&
+        Object.keys(query).some((q) => ['location', 'rating', 'color', 'model'].includes(q)) && (
+          <Group mt={30}>
+            <Text size="lg">No bikes found for these filters</Text>
+            <Group>
+              {query.location && <Badge color="blue">{query.location}</Badge>}
+              {query.color && <Badge color="cyan">{query.color}</Badge>}
+              {query.model && <Badge color="pink">{query.model}</Badge>}
+            </Group>
           </Group>
-        </Group>
-      )}
+        )}
     </Box>
   );
 }
