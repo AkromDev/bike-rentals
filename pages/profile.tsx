@@ -1,9 +1,10 @@
-import { Badge, Box, Button, Container, Group, Paper, Text, Title } from '@mantine/core';
+import { Badge, Box, Button, Container, Group, Modal, Paper, Text, Title } from '@mantine/core';
 import { useNotifications } from '@mantine/notifications';
 import dayjs from 'dayjs';
 import { AuthAction, useAuthUser, withAuthUser, withAuthUserTokenSSR } from 'next-firebase-auth';
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import MainLayout from 'src/components/layout/main-layout';
+import RatingStar from 'src/components/RatingStar';
 import admin from 'src/firebase/nodeApp';
 import usePostRequestWithToken from 'src/hooks/usePostRequestWithToken';
 
@@ -13,6 +14,9 @@ const Profile = ({ reservations: _reservations }: any) => {
   const notifications = useNotifications();
   const [reservations, setReservations] = useState();
   const [loadingId, setLoadingId] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
+  const modalItemRef = useRef();
+  const [rate, setRate] = useState(0);
 
   useEffect(() => {
     setReservations(_reservations);
@@ -36,23 +40,29 @@ const Profile = ({ reservations: _reservations }: any) => {
     });
   };
 
-  const updateReservation = (reservationId, nextStatus: 'CANCELLED' | 'COMPLETED') => {
+  const updateReservation = (reservationId, bikeId, nextStatus: 'CANCELLED' | 'COMPLETED') => {
     setLoadingId(reservationId);
     if (nextStatus === 'COMPLETED') {
       postRequestWithToken('/api/reservations', {
         userId: authUser.id || authUser.uid,
         reservationId,
+        bikeId,
         nextStatus,
+        rate,
       }, 'PUT')
       .then(() => {
         onSuccess(reservationId, nextStatus);
       }).catch(() => {
         onError(nextStatus);
-      }).finally(() => setLoadingId(''));
+      }).finally(() => {
+        setLoadingId('');
+        setModalOpen(false);
+      });
     } else {
       postRequestWithToken('/api/reservations', {
         reservationId,
         userId: authUser.id || authUser.uid,
+        bikeId,
         nextStatus,
       }, 'PUT').then(() => {
         onSuccess(reservationId, nextStatus);
@@ -77,6 +87,32 @@ const Profile = ({ reservations: _reservations }: any) => {
           No reservations
         </Text>
       )}
+      <Modal
+        opened={modalOpen}
+        onClose={() => {
+          setModalOpen(false);
+        }}
+        title="Complete if you returned the bike"
+        sx={{
+        '.mantine-Modal-title': {
+          textAlign: 'center',
+          fontWeight: 'bolder',
+        },
+      }}
+      >
+        <Group direction="column" align="center" sx={{ padding: 20 }}>
+          <Text>Consider to leave a good rating to help us</Text>
+          <RatingStar onStarChange={(v) => setRate(v)} />
+          <Button
+            variant="outline"
+            color="blue"
+            fullWidth
+            loading={modalItemRef.current?.id === loadingId}
+            onClick={() => updateReservation(modalItemRef.current.id, modalItemRef.current.bikeId, 'COMPLETED')}
+          >Complete
+          </Button>
+        </Group>
+      </Modal>
 
       {hasReservations && (
         <Box mt={20}>
@@ -123,7 +159,7 @@ const Profile = ({ reservations: _reservations }: any) => {
                     <Button
                       color="red"
                       variant="outline"
-                      onClick={() => updateReservation(item.id, 'CANCELLED',)}
+                      onClick={() => updateReservation(item.id, item.bikeId, 'CANCELLED',)}
                       disabled={loadingId === item.id}
                     >
                       Cancel
@@ -131,10 +167,14 @@ const Profile = ({ reservations: _reservations }: any) => {
                     <Button
                       color="blue"
                       variant="outline"
-                      onClick={() => updateReservation(item.id, 'COMPLETED')}
+                      onClick={() => {
+                        modalItemRef.current = item;
+                        setRate(0);
+                        setModalOpen(true);
+                      }}
                       disabled={loadingId === item.id}
                     >
-                      Complete
+                      Compelte
                     </Button>
                   </Group>
                 )}

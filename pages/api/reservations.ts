@@ -54,19 +54,54 @@ const reservationHandler = async (req: NextApiRequest, res: NextApiResponse) => 
     }
   } else if (method === 'PUT') {
     try {
-      const { userId, reservationId, nextStatus } = req.body;
+      const { userId, reservationId, nextStatus, rate, bikeId } = req.body;
 
       if (!(['COMPLETED', 'CANCELLED'].includes(nextStatus))) {
         return res.status(400).send({ message: `Invalid status: ${nextStatus}` });
       }
 
+      if (!bikeId || !userId || !reservationId) {
+        return res.status(400).send({ message: 'Missing fields' });
+      }
+
       const userRef = admin.firestore().collection('users').doc(userId);
+      const bikeRef = admin.firestore().collection('bikes').doc(bikeId);
       const userSnp = await userRef.get();
       const { activeResCount = 0 } = userSnp.data();
 
-      await admin.firestore().collection('reservations').doc(reservationId).update({
+      const data = {
         status: nextStatus,
-      });
+      };
+      let bikeRating = null;
+      if (nextStatus === 'COMPLETED' && rate > 0) {
+        data.userRate = rate;
+        const bikeSnp = await bikeRef.get();
+        const { rating } = bikeSnp.data();
+        if (!rating) {
+          bikeRating = {
+            rateAvg: rate,
+            rateCount: 1,
+          };
+        } else {
+          const newRateCount = rating.rateCount + 1;
+          const oldRatingTotal = rating.rateAvg * rating.rateCount;
+          const newAvgRating = (oldRatingTotal + rate) / newRateCount;
+
+          bikeRating = {
+              rateAvg: newAvgRating,
+              rateCount: newRateCount,
+            };
+        }
+      }
+
+      const bikeUpdatedData = {
+        available: true,
+      };
+      if (bikeRating) {
+        bikeUpdatedData.rating = bikeRating;
+      }
+      await admin.firestore().collection('reservations').doc(reservationId).update(data);
+      await admin.firestore().collection('bikes').doc(bikeId).update(bikeUpdatedData);
 
       await userRef.update({
         activeResCount: activeResCount - 1,
@@ -74,7 +109,7 @@ const reservationHandler = async (req: NextApiRequest, res: NextApiResponse) => 
 
       return res.status(201).send({ success: true });
     } catch (err: any) {
-      console.log('ducccing error');
+      console.log('reservation update error');
       return handleFirebaseError(res, err);
     }
   }

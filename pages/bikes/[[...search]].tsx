@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { GetServerSideProps } from 'next';
 import { ReactNode } from 'react';
 import MainLayout from 'src/components/layout/main-layout';
+import RatingStar from 'src/components/RatingStar';
 import { getBikes } from 'src/firebase/getBikes';
 import { getFilters } from 'src/firebase/getFilters';
 import BikeFilters from 'src/templates/BikeFilters';
