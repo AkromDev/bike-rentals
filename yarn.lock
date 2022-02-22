@@ -6734,11 +6734,6 @@ next-firebase-auth@^1.0.0-canary.5:
     cookies "^0.8.0"
     hoist-non-react-statics "^3.3.2"
 
-next-usequerystate@^1.7.0:
-  version "1.7.0"
-  resolved "https://registry.npmjs.org/next-usequerystate/-/next-usequerystate-1.7.0.tgz"
-  integrity sha512-OAR+4zgWCz1P5XnrbCrhTBf/UfJIoj17mXRDB5daUq5yYZyYETWQnJFuqEFB9qEd8KrpjBNF2aSmrQpqVXdLUA==
-
 next@12.0.7:
   version "12.0.7"
   resolved "https://registry.npmjs.org/next/-/next-12.0.7.tgz"

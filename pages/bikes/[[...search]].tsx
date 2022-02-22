@@ -3,13 +3,12 @@ import dayjs from 'dayjs';
 import { GetServerSideProps } from 'next';
 import { ReactNode } from 'react';
 import MainLayout from 'src/components/layout/main-layout';
-import RatingStar from 'src/components/RatingStar';
 import { getBikes } from 'src/firebase/getBikes';
 import { getFilters } from 'src/firebase/getFilters';
 import BikeFilters from 'src/templates/BikeFilters';
 import BikesList from 'src/templates/BikesList';
 
-export default function Bikes({ bikes = [], filters = {}, initial, invalid }) {
+export default function Bikes({ bikes = [], filters = {}, initial = false, invalid = false }) {
   return (
     <Container sx={{ paddingBottom: 100 }}>
       <Title sx={{ fontSize: 60, fontWeight: 900, letterSpacing: -2 }} align="center" mt={100}>

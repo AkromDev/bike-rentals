@@ -4,8 +4,6 @@ export const getBike = async (bikeId: string) => {
   const db = admin.firestore();
   const bikesRef = db.collection('bikes');
 
-  // const locationsRef = db.collection('locations');
-
   if (!bikeId) {
     return null;
   }

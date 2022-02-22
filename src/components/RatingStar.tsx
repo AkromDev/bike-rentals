@@ -1,4 +1,5 @@
 import React from 'react';
+//@ts-ignore
 import ReactStars from 'react-rating-stars-component';
 
 const firstExample = {
@@ -8,8 +9,6 @@ const firstExample = {
   isHalf: true,
 };
 
-export default function RatingStar({ onStarChange }) {
-  return (
-      <ReactStars {...firstExample} onChange={onStarChange} />
-  );
+export default function RatingStar({ onStarChange }: { onStarChange: () => void }) {
+  return <ReactStars {...firstExample} onChange={onStarChange} />;
 }

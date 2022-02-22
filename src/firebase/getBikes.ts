@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { getFilters } from './getFilters';
 import admin from './nodeApp';
 
-export const getBikes = async (queries, fetchAll: boolean = false) => {
+export const getBikes = async (queries: Record<string, string>, fetchAll: boolean = false) => {
   const db = admin.firestore();
   let bikesRef = db.collection('bikes');
   const reservationsRef = db.collection('reservations');
@@ -22,10 +22,6 @@ export const getBikes = async (queries, fetchAll: boolean = false) => {
   if (queries.location) {
     bikesRef = bikesRef.where('location', '==', queries.location);
   }
-  // if (queries.rating && !Number.isNaN(Number(queries.rating))) {
-  // bikesRef = bikesRef.where('rating.rateAvg', '>=', Number(queries.rating))
-  // did not work for some reason
-  // }
   if (queries.model) {
     bikesRef = bikesRef.where('model', '==', queries.model);
   }
@@ -54,7 +50,6 @@ export const getBikes = async (queries, fetchAll: boolean = false) => {
       );
     }
     if (queries.rating && !Number.isNaN(Number(queries.rating))) {
-      console.log('filtering rate');
       bikes = bikes.filter((bike) => bike.rating && bike.rating.rateAvg >= Number(queries.rating));
     }
 

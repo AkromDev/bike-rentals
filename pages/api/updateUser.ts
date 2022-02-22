@@ -1,7 +1,6 @@
 import * as admin from 'firebase-admin';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import handleFirebaseError from 'src/firebase/utils/handleFirebaseError';
-import populateFirebaseUser from 'src/firebase/utils/populateFirebaseUser';
 import initAuth from 'src/firebase/initAuth';
 import { withAuthUserTokenAPI } from 'utils';
 
@@ -17,7 +16,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     await admin.auth().updateUser(id, { displayName, password, email });
     await admin.auth().setCustomUserClaims(id, { role });
-    // const user = await admin.auth().getUser(id);
 
     return res.status(204).send({ sucess: true });
   } catch (err: any) {

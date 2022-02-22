@@ -1,7 +1,6 @@
-import { Badge, Box, Button, Group, Select, Text, Title } from '@mantine/core';
+import { Badge, Box, Button, Group, Select, Text } from '@mantine/core';
 import { DateRangePicker } from '@mantine/dates';
 import dayjs from 'dayjs';
-import { queryTypes, useQueryStates } from 'next-usequerystate';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 

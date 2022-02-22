@@ -1,6 +1,4 @@
 import { useCallback, useState } from 'react';
-import { getApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
 import axios, { Method } from 'axios';
 import { useAuthUser } from 'next-firebase-auth';
 

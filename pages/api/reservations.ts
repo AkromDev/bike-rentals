@@ -10,7 +10,7 @@ initAuth();
 
 const reservationHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const method: Method | undefined = req.method as Method | undefined;
-   if (method === 'POST') {
+  if (method === 'POST') {
     try {
       const { userId, bikeId, startDate, endDate, paymentAmount, model } = req.body;
 
@@ -49,14 +49,13 @@ const reservationHandler = async (req: NextApiRequest, res: NextApiResponse) => 
 
       return res.status(201).send({ success: true });
     } catch (err: any) {
-      console.log('reservation err', err);
       return handleFirebaseError(res, err);
     }
   } else if (method === 'PUT') {
     try {
       const { userId, reservationId, nextStatus, rate, bikeId } = req.body;
 
-      if (!(['COMPLETED', 'CANCELLED'].includes(nextStatus))) {
+      if (!['COMPLETED', 'CANCELLED'].includes(nextStatus)) {
         return res.status(400).send({ message: `Invalid status: ${nextStatus}` });
       }
 
@@ -88,9 +87,9 @@ const reservationHandler = async (req: NextApiRequest, res: NextApiResponse) => 
           const newAvgRating = (oldRatingTotal + rate) / newRateCount;
 
           bikeRating = {
-              rateAvg: newAvgRating,
-              rateCount: newRateCount,
-            };
+            rateAvg: newAvgRating,
+            rateCount: newRateCount,
+          };
         }
       }
 
