@@ -23,8 +23,11 @@ const reservationHandler = async (req: NextApiRequest, res: NextApiResponse) => 
     try {
       const { userId, bikeId, startDate, endDate, paymentAmount } = req.body;
 
-      if (!userId || !bikeId) {
-        return res.status(400).send({ message: 'Missing fields' });
+      if (!userId) {
+        return res.status(400).send({ message: 'User id missing' });
+      }
+      if (!bikeId) {
+        return res.status(400).send({ message: 'Bike id missing' });
       }
 
       if (!dayjs(startDate).isValid() || !dayjs(endDate).isValid()) {

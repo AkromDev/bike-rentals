@@ -9,6 +9,7 @@ export default function usePostRequestWithToken(addUserId = false) {
   const [loading, setLoading] = useState<boolean>(false);
 
   const authUser = useAuthUser();
+
   const postRequestWithToken = useCallback(
     async (url: string, data: Record<string, any>, method: Method = 'POST') => {
       setError(null);
@@ -18,7 +19,7 @@ export default function usePostRequestWithToken(addUserId = false) {
         await axios({
           url,
           method,
-          data: addUserId ? { ...data, userId: authUser.uid } : data,
+          data: addUserId ? { ...data, userId: authUser.id } : data,
           headers: {
             Authorization: `Bearer ${idToken}`,
           },

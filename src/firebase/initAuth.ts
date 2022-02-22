@@ -16,7 +16,7 @@ const initAuth = () => {
       const origin = isServerSide ? absoluteUrl(ctx.req).origin : window.location.origin;
       const destPath = typeof window === 'undefined' ? ctx.resolvedUrl : window.location.href;
       const destURL = new URL(destPath, origin);
-      return `auth?destination=${encodeURIComponent(destURL as any)}`;
+      return `/auth?destination=${encodeURIComponent(destURL as any)}`;
     },
 
     // This demonstrates setting a dynamic destination URL when

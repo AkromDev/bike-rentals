@@ -1,9 +1,9 @@
-import { Badge, Box, Button, Group, Modal, Text } from '@mantine/core';
+import { Box, Button, Group, Modal } from '@mantine/core';
 import { useNotifications } from '@mantine/notifications';
 import { CheckIcon, ReloadIcon } from '@modulz/radix-icons';
 import { XCircleFillIcon } from '@primer/octicons-react';
 import axios from 'axios';
-import { useAuthUser, withAuthUser, AuthAction } from 'next-firebase-auth';
+import { AuthAction, useAuthUser, withAuthUser } from 'next-firebase-auth';
 import { useEffect, useState } from 'react';
 import { DataTable } from 'src/components/datatable';
 import SelectFilter from '../../components/datatable/filters/SelectFilter';

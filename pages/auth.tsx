@@ -23,5 +23,5 @@ export const getServerSideProps = withAuthUserTokenSSR({
 export default withAuthUser({
   whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
   whenAuthed: AuthAction.REDIRECT_TO_APP,
-  authPageURL: '/my-login-page/',
+  authPageURL: '/auth/',
 })(HomePage);

@@ -35,13 +35,13 @@ export const getBikes = async (queries, fetchAll: boolean = false) => {
     const reservationsSnapshot = await reservationsRef.where('status', '==', 'RESERVED').get();
     const reservations = reservationsSnapshot.docs.map(d => ({ ...d.data(), id: d.id }));
 
-    // console.log('1reservationsreservations', reservations);
     if (reservations.length > 0) {
       bikes = bikes.filter((bike) =>
       reservations.every((res) => {
         if (bike.id !== res.bikeId) {
           return true;
         }
+
         const overlaping =
           !dayjs(queries.start).isAfter(res.endDate) &&
           !dayjs(queries.end).isBefore(res.startDate);

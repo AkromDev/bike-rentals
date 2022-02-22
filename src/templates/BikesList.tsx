@@ -36,15 +36,13 @@ function BikesList({ bikes }: Props) {
                   height={475}
                   unoptimized
                 />
-                {!bike.available && (
                   <Badge
-                    color={bike.available ? 'cyan' : 'pink'}
+                    color="cyan"
                     variant="light"
                     sx={{ position: 'absolute', top: 20, right: 10, padding: 10 }}
                   >
-                    Unavailable
+                    {bike.model}
                   </Badge>
-                )}
               </Box>
             </Card.Section>
             <Group position="apart" style={{ marginBottom: 5, marginTop: theme.spacing.sm }}>

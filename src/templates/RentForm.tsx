@@ -18,7 +18,7 @@ import { useNotifications } from '@mantine/notifications';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React from 'react';
 import usePostRequestWithToken from 'src/hooks/usePostRequestWithToken';
 
 dayjs.extend(relativeTime);
