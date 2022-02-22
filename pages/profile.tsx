@@ -1,12 +1,11 @@
-import { Badge, Box, Button, Container, Group, Modal, Paper, Text, Title } from '@mantine/core';
+import { Badge, Box, Button, Container, Group, Paper, Text, Title } from '@mantine/core';
 import { useNotifications } from '@mantine/notifications';
 import dayjs from 'dayjs';
-import { firestore } from 'firebase-admin';
 import { AuthAction, useAuthUser, withAuthUser, withAuthUserTokenSSR } from 'next-firebase-auth';
 import React, { ReactNode, useEffect, useState } from 'react';
 import MainLayout from 'src/components/layout/main-layout';
+import admin from 'src/firebase/nodeApp';
 import usePostRequestWithToken from 'src/hooks/usePostRequestWithToken';
-import bikes from './api/bikes';
 
 const Profile = ({ reservations: _reservations }: any) => {
   const authUser = useAuthUser();
@@ -157,7 +156,7 @@ export const getServerSideProps = withAuthUserTokenSSR({
 })(async ({ AuthUser, req }) => {
   const id = await AuthUser.id;
 
-  const reservationsRef = firestore().collection('reservations').where('userId', '==', id);
+  const reservationsRef = admin.firestore().collection('reservations').where('userId', '==', id);
   const reservationsSnapshot = await reservationsRef.get();
   const reservations = reservationsSnapshot.docs.map((doc) => {
     const _createdAt = doc.data().createdAt as firestore.Timestamp;
