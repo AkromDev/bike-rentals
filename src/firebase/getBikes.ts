@@ -50,7 +50,7 @@ export const getBikes = async (queries, fetchAll: boolean = false) => {
       );
     }
 
-    return { bikes, filters: filters[0] };
+    return { bikes, filters };
   } catch (err) {
     return null;
   }

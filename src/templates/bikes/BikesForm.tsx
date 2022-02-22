@@ -83,8 +83,6 @@ export default function BikesForm({
     { value: 'false', label: 'False' },
   ];
 
-  const colors: Array<string> = filters?.colors || [];
-
   const handleSubmit = () => {
     const values = { ...form.values, available: form.values.available === 'true' };
     if (formType === 'create') {
@@ -129,13 +127,6 @@ export default function BikesForm({
     >
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <LoadingOverlay visible={createLoading || updateLoading} />
-        {/* <TextInput
-          data-autofocus
-          required
-          placeholder="Model"
-          label="Model"
-          {...form.getInputProps('model')}
-        /> */}
         <Select
           mt="md"
           label="Location"
@@ -157,21 +148,6 @@ export default function BikesForm({
           data={filters.colors || []}
           {...form.getInputProps('color')}
         />
-
-        {/* <TextInput
-          mt="md"
-          required
-          placeholder="Location"
-          label="Location"
-          {...form.getInputProps('location')}
-        />
-        <TextInput
-          mt="md"
-          required
-          placeholder="Color"
-          label="Color"
-          {...form.getInputProps('color')}
-        /> */}
         <TextInput
           mt="md"
           required
