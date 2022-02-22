@@ -11,7 +11,7 @@ import BikesList from 'src/templates/BikesList';
 export default function Bikes({ bikes = [], filters = {}, initial, invalid }) {
   return (
     <Container sx={{ paddingBottom: 100 }}>
-      <Title sx={{ fontSize: 100, fontWeight: 900, letterSpacing: -2 }} align="center" mt={100}>
+      <Title sx={{ fontSize: 60, fontWeight: 900, letterSpacing: -2 }} align="center" mt={100}>
         <Text
           inherit
           variant="gradient"

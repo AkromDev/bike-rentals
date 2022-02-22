@@ -6,6 +6,7 @@ import { AuthAction, useAuthUser, withAuthUser, withAuthUserTokenSSR } from 'nex
 import React, { ReactNode, useEffect, useState } from 'react';
 import MainLayout from 'src/components/layout/main-layout';
 import usePostRequestWithToken from 'src/hooks/usePostRequestWithToken';
+import bikes from './api/bikes';
 
 const Profile = ({ reservations: _reservations }: any) => {
   const authUser = useAuthUser();
@@ -70,7 +71,7 @@ const Profile = ({ reservations: _reservations }: any) => {
       <Text size="lg" component="h2" weight="bold">
         Info
       </Text>
-      <Text color="pink">Name: {authUser.displayName}</Text>
+      <Text>Name: {authUser.displayName}</Text>
       <Text color="blue">Email: {authUser.email}</Text>
       {!hasReservations && (
         <Text size="lg" component="h2" weight="bold">
@@ -93,10 +94,15 @@ const Profile = ({ reservations: _reservations }: any) => {
                     </Text>
                     <Badge color={item === 'CANCELLED' ? 'red' : ''}>{item.status}</Badge>
                   </Group>
-
+                  <Text mt={5}>
+                    Payment amount: {' '}
+                    <Text component="span" weight="bold">
+                      ${item.paymentAmount}
+                    </Text>
+                  </Text>
                   <Text mt={5}>
                     Start date :{' '}
-                    <Text component="span" color="pink">
+                    <Text component="span" color="blue">
                       {dayjs(item.startDate).format('MMMM DD,YYYY')}
                     </Text>
                   </Text>

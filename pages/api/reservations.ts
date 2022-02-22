@@ -10,24 +10,12 @@ initAuth();
 
 const reservationHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const method: Method | undefined = req.method as Method | undefined;
-  if (method === 'GET') {
-    // try {
-    //   const { userId } = req.query;
-    //   const bikesRef = admin.firestore().collection('users').doc(userId);
-
-    //   return res.status(200).send(data);
-    // } catch (err: any) {
-    //   return handleFirebaseError(res, err);
-    // }
-  } else if (method === 'POST') {
+   if (method === 'POST') {
     try {
-      const { userId, bikeId, startDate, endDate, paymentAmount } = req.body;
+      const { userId, bikeId, startDate, endDate, paymentAmount, model } = req.body;
 
-      if (!userId) {
+      if (!userId || !bikeId || !model) {
         return res.status(400).send({ message: 'User id missing' });
-      }
-      if (!bikeId) {
-        return res.status(400).send({ message: 'Bike id missing' });
       }
 
       if (!dayjs(startDate).isValid() || !dayjs(endDate).isValid()) {
@@ -49,6 +37,8 @@ const reservationHandler = async (req: NextApiRequest, res: NextApiResponse) => 
         endDate,
         status: 'RESERVED',
         createdAt: admin.firestore.Timestamp.fromDate(new Date()).toDate(),
+        model,
+        paymentAmount,
       };
 
       await reservationsRef.add(reservation);

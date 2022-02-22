@@ -49,13 +49,15 @@ export function RentForm({ style, bike }: RentFormProps) {
     && dayjs(start).isBefore(dayjs(end));
 
   const days = isRangeValid ? dayjs(end).diff(start, 'days') : null;
+  const totalPrices = Number(bike.priceInUSD || 0) * Number(days);
 
   const onSubmit = () => {
       postRequestWithToken('/api/reservations', {
         bikeId: bike.id,
         startDate: start,
         endDate: end,
-        paymentAmount: 203,
+        paymentAmount: totalPrices,
+        model: bike.model,
       })
         .then(() => {
           notificaton.showNotification({
@@ -69,7 +71,6 @@ export function RentForm({ style, bike }: RentFormProps) {
           console.log('errrr', err);
         });
   };
-  const totalPrices = Number(bike.priceInUSD || 0) * Number(days);
   return (
     <Paper
       padding="lg"
