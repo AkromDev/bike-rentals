@@ -36,39 +36,55 @@ const Profile = ({ reservations: _reservations }: any) => {
   const onError = (nextStatus) => {
     notifications.showNotification({
       title: 'Error',
-      message: nextStatus === 'COMPLETED' ? 'Completing the reservation failed' : 'Cancelling the reservation failed',
+      message:
+        nextStatus === 'COMPLETED'
+          ? 'Completing the reservation failed'
+          : 'Cancelling the reservation failed',
     });
   };
 
   const updateReservation = (reservationId, bikeId, nextStatus: 'CANCELLED' | 'COMPLETED') => {
     setLoadingId(reservationId);
     if (nextStatus === 'COMPLETED') {
-      postRequestWithToken('/api/reservations', {
-        userId: authUser.id || authUser.uid,
-        reservationId,
-        bikeId,
-        nextStatus,
-        rate,
-      }, 'PUT')
-      .then(() => {
-        onSuccess(reservationId, nextStatus);
-      }).catch(() => {
-        onError(nextStatus);
-      }).finally(() => {
-        setLoadingId('');
-        setModalOpen(false);
-      });
+      postRequestWithToken(
+        '/api/reservations',
+        {
+          userId: authUser.id || authUser.uid,
+          reservationId,
+          bikeId,
+          nextStatus,
+          rate,
+        },
+        'PUT'
+      )
+        .then(() => {
+          onSuccess(reservationId, nextStatus);
+        })
+        .catch(() => {
+          onError(nextStatus);
+        })
+        .finally(() => {
+          setLoadingId('');
+          setModalOpen(false);
+        });
     } else {
-      postRequestWithToken('/api/reservations', {
-        reservationId,
-        userId: authUser.id || authUser.uid,
-        bikeId,
-        nextStatus,
-      }, 'PUT').then(() => {
-        onSuccess(reservationId, nextStatus);
-      }).catch(() => {
-        onError(nextStatus);
-      }).finally(() => setLoadingId(''));
+      postRequestWithToken(
+        '/api/reservations',
+        {
+          reservationId,
+          userId: authUser.id || authUser.uid,
+          bikeId,
+          nextStatus,
+        },
+        'PUT'
+      )
+        .then(() => {
+          onSuccess(reservationId, nextStatus);
+        })
+        .catch(() => {
+          onError(nextStatus);
+        })
+        .finally(() => setLoadingId(''));
     }
   };
 
@@ -82,7 +98,9 @@ const Profile = ({ reservations: _reservations }: any) => {
       </Text>
       <Text>Name: {authUser.displayName}</Text>
       <Text color="blue">Email: {authUser.email}</Text>
-      <Button onClick={authUser.signOut} mt={10} variant="outline" color="red">Sign out</Button>
+      <Button onClick={authUser.signOut} mt={10} variant="outline" color="red">
+        Sign out
+      </Button>
       {!hasReservations && (
         <Text size="lg" component="h2" weight="bold">
           No reservations
@@ -95,11 +113,11 @@ const Profile = ({ reservations: _reservations }: any) => {
         }}
         title="Complete if you returned the bike"
         sx={{
-        '.mantine-Modal-title': {
-          textAlign: 'center',
-          fontWeight: 'bolder',
-        },
-      }}
+          '.mantine-Modal-title': {
+            textAlign: 'center',
+            fontWeight: 'bolder',
+          },
+        }}
       >
         <Group direction="column" align="center" sx={{ padding: 20 }}>
           <Text>Consider to leave a good rating to help us</Text>
@@ -109,8 +127,11 @@ const Profile = ({ reservations: _reservations }: any) => {
             color="blue"
             fullWidth
             loading={modalItemRef.current?.id === loadingId}
-            onClick={() => updateReservation(modalItemRef.current.id, modalItemRef.current.bikeId, 'COMPLETED')}
-          >Complete
+            onClick={() =>
+              updateReservation(modalItemRef.current.id, modalItemRef.current.bikeId, 'COMPLETED')
+            }
+          >
+            Complete
           </Button>
         </Group>
       </Modal>
@@ -128,10 +149,10 @@ const Profile = ({ reservations: _reservations }: any) => {
                     <Text weight="bolder" size="lg">
                       {item.model}
                     </Text>
-                    <Badge color={item === 'CANCELLED' ? 'red' : ''}>{item.status}</Badge>
+                    <Badge color={item.status === 'CANCELLED' ? 'red' : ''}>{item.status}</Badge>
                   </Group>
                   <Text mt={5}>
-                    Payment amount: {' '}
+                    Payment amount:{' '}
                     <Text component="span" weight="bold">
                       ${item.paymentAmount}
                     </Text>
@@ -160,7 +181,7 @@ const Profile = ({ reservations: _reservations }: any) => {
                     <Button
                       color="red"
                       variant="outline"
-                      onClick={() => updateReservation(item.id, item.bikeId, 'CANCELLED',)}
+                      onClick={() => updateReservation(item.id, item.bikeId, 'CANCELLED')}
                       disabled={loadingId === item.id}
                     >
                       Cancel
