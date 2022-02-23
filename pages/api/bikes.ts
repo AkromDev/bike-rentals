@@ -74,7 +74,7 @@ const bikesHandler = async (req: NextApiRequest, res: NextApiResponse) => {
         available,
       };
       if (imgUrl) {
-        bike.imgUrl = imgUrl;
+        bikeUpdated.imgUrl = imgUrl;
       }
       await admin.firestore().collection('bikes').doc(id).update(bikeUpdated);
       if (addedFilters) {

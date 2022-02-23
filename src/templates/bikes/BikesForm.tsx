@@ -22,7 +22,7 @@ function getInitialValues(formType: UserFormType, bike: any | undefined) {
       model: bike.model || '',
       color: bike.color || '',
       available: bike.available ? 'true' : 'false',
-      imgUrl: bike.imgUrl || false,
+      imgUrl: bike.imgUrl || '',
       priceInUSD: bike.priceInUSD || 100,
     };
   }
