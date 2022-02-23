@@ -4,7 +4,7 @@ import * as admin from 'firebase-admin';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import initAuth from 'src/firebase/initAuth';
 import handleFirebaseError from 'src/firebase/utils/handleFirebaseError';
-import { invalidHTTPMethod, withAuthUserTokenAPI } from 'utils';
+import { invalidHTTPMethod, round, withAuthUserTokenAPI } from 'utils';
 
 initAuth();
 
@@ -88,7 +88,7 @@ const reservationHandler = async (req: NextApiRequest, res: NextApiResponse) => 
           const newAvgRating = (oldRatingTotal + rate) / newRateCount;
 
           bikeRating = {
-            rateAvg: newAvgRating,
+            rateAvg: round(newAvgRating, 2),
             rateCount: newRateCount,
           };
         }

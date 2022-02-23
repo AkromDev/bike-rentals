@@ -44,9 +44,15 @@ function Bike({ bike }) {
           <Group mb={15} mt={10}>
             <Group align="center" spacing={5}>
               <Star style={{ height: 25 }} />
-              <Text weight="bold" sx={{ lineHeight: '25px' }}>
-                {bike.rating?.rateAvg}
-              </Text>
+              {bike.rating?.rateCount > 0 ? (
+                <Text weight="bold" sx={{ lineHeight: '25px' }}>
+                  {bike.rating?.rateAvg}
+                </Text>
+              ) : (
+                <Text weight="normal" sx={{ lineHeight: '15px' }}>
+                  No ratings
+                </Text>
+              )}
             </Group>
             <Badge color="pink" variant="light">
               {bike.color}

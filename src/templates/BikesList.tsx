@@ -38,6 +38,13 @@ function BikesList({ bikes }: Props) {
                   unoptimized={isValidHttpUrl(bike.imgUrl)}
                 />
                 <Badge
+                  color={String(bike.color).toLowerCase()}
+                  variant="light"
+                  sx={{ position: 'absolute', top: 20, left: 10, padding: 10 }}
+                >
+                  {bike.color}
+                </Badge>
+                <Badge
                   color="cyan"
                   variant="light"
                   sx={{ position: 'absolute', top: 20, right: 10, padding: 10 }}
@@ -52,13 +59,21 @@ function BikesList({ bikes }: Props) {
 
             <Group direction="row" position="apart" align="center" mt={10} mb={20}>
               <Group direction="row" position="left" spacing={5}>
-                <Text size="sm" style={{ color: secondaryColor, lineHeight: 1.5 }} weight="bold">
-                  {bike.rating.rateAvg}
-                </Text>
+                {bike.rating?.rateCount > 0 && (
+                  <Text size="sm" style={{ color: secondaryColor, lineHeight: 1.5 }} weight="bold">
+                    {bike.rating?.rateAvg}
+                  </Text>
+                )}
                 <Star style={{ height: 20, width: 20 }} />
-                <Text size="sm" style={{ color: secondaryColor, lineHeight: 1.5 }}>
-                  ({bike.rating.rateCount} ratings)
-                </Text>
+                {bike.rating?.rateCount > 0 ? (
+                  <Text size="sm" style={{ color: secondaryColor, lineHeight: 1.5 }}>
+                    ({bike.rating?.rateCount} ratings)
+                  </Text>
+                ) : (
+                  <Text size="sm" style={{ color: secondaryColor, lineHeight: 1.5 }}>
+                    No ratings
+                  </Text>
+                )}
               </Group>
               <Group align="center">
                 <Text size="md" weight={600} style={{ color: secondaryColor }}>

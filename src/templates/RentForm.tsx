@@ -31,11 +31,11 @@ export interface RentFormProps {
 }
 
 function formatDate(date) {
- if (!date || !dayjs(date).isValid()) {
-   return 'Invalid date';
- }
+  if (!date || !dayjs(date).isValid()) {
+    return 'Invalid date';
+  }
 
- return dayjs(date).format('MMMM DD,YYYY');
+  return dayjs(date).format('MMMM DD,YYYY');
 }
 export function RentForm({ style, bike }: RentFormProps) {
   const theme = useMantineTheme();
@@ -45,31 +45,31 @@ export function RentForm({ style, bike }: RentFormProps) {
   const router = useRouter();
   const { start, end } = router.query;
 
-  const isRangeValid = dayjs(start).isValid() && dayjs(end).isValid()
-    && dayjs(start).isBefore(dayjs(end));
+  const isRangeValid =
+    dayjs(start).isValid() && dayjs(end).isValid() && dayjs(start).isBefore(dayjs(end));
 
   const days = isRangeValid ? dayjs(end).diff(start, 'days') : null;
   const totalPrices = Number(bike.priceInUSD || 0) * Number(days);
 
   const onSubmit = () => {
-      postRequestWithToken('/api/reservations', {
-        bikeId: bike.id,
-        startDate: start,
-        endDate: end,
-        paymentAmount: totalPrices,
-        model: bike.model,
-      })
-        .then(() => {
-          notificaton.showNotification({
-            title: 'Success',
-            message: 'Successfully reserved',
-          });
-
-          router.replace('/profile');
-        })
-        .catch((err) => {
-          console.log('errrr', err);
+    postRequestWithToken('/api/reservations', {
+      bikeId: bike.id,
+      startDate: start,
+      endDate: end,
+      paymentAmount: totalPrices,
+      model: bike.model,
+    })
+      .then(() => {
+        notificaton.showNotification({
+          title: 'Success',
+          message: 'Successfully reserved',
         });
+
+        router.replace('/profile');
+      })
+      .catch((err) => {
+        console.log('errrr', err);
+      });
   };
   return (
     <Paper
@@ -99,7 +99,7 @@ export function RentForm({ style, bike }: RentFormProps) {
           </Group>
           <Group spacing={5}>
             <Icon icon={environmentOutlined} />
-            <Text>Seoul, gwangjinu gunja 43</Text>
+            <Text>{bike.location}</Text>
           </Group>
           <Group spacing={5}>
             <Icon icon={clockCircleOutlined} />
