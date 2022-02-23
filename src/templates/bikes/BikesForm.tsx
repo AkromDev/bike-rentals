@@ -11,7 +11,7 @@ import {
 import { useForm } from '@mantine/hooks';
 import { useNotifications } from '@mantine/notifications';
 import { CheckIcon } from '@modulz/radix-icons';
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { UserFormType } from '../users/UserForm';
 import useBikeActionRequest from './useBikeActionRequest';
 
@@ -54,14 +54,31 @@ export default function BikesForm({
   onSuccess,
   formType = 'create',
   bike,
-  filters,
+  filters: _filters,
 }: BikeFormProps) {
   const theme = useMantineTheme();
   const notifications = useNotifications();
 
   const [createBike, createLoading, createError] = useBikeActionRequest();
   const [updateBike, updateLoading, updateError] = useBikeActionRequest('PUT');
+  const [filters, setFilters] = useState({});
+  const lastAddedFilters = useRef<Record<string, string>>({});
+  useEffect(() => {
+    setFilters(_filters);
+  }, [_filters]);
 
+  const createNewFilter = (filterCategory: 'colors' | 'models' | 'locations', filter: string) => {
+    setFilters((prev) => {
+      const newFilters = { ...prev };
+      if (Array.isArray(newFilters[filterCategory])) {
+        newFilters[filterCategory].push(filter);
+      } else {
+        newFilters[filterCategory] = [filter];
+      }
+      lastAddedFilters.current[filterCategory] = filter;
+      return newFilters;
+    });
+  };
   const form = useForm({
     initialValues: getInitialValues(formType, bike),
 
@@ -69,7 +86,7 @@ export default function BikesForm({
       location: (value) => value.trim().length >= 2,
       model: (value) => value.trim().length >= 2,
       color: (value) => value.trim().length >= 2,
-      imgUrl: (value) => value.trim().length >= 2,
+      // imgUrl: (value) => value.trim().length >= 2,
       priceInUSD: (value) => value > 0,
     },
 
@@ -84,7 +101,21 @@ export default function BikesForm({
   ];
 
   const handleSubmit = () => {
+    const addedFilters = lastAddedFilters.current;
     const values = { ...form.values, available: form.values.available === 'true' };
+
+    if (addedFilters.locations !== values.location) {
+      delete addedFilters.locations;
+    }
+    if (addedFilters.colors !== values.color) {
+      delete addedFilters.colors;
+    }
+    if (addedFilters.models !== values.model) {
+      delete addedFilters.models;
+    }
+    if (Object.keys(addedFilters).length > 0) {
+      values.addedFilters = addedFilters;
+    }
     if (formType === 'create') {
       // const { model, location, color, role, fullName } = form.values;
       createBike(values)
@@ -132,6 +163,10 @@ export default function BikesForm({
           label="Location"
           placeholder="Location"
           data={filters.locations || []}
+          searchable
+          creatable
+          onCreate={(newStr) => createNewFilter('locations', newStr)}
+          getCreateLabel={(query) => `+ Create ${query}`}
           {...form.getInputProps('location')}
         />
         <Select
@@ -139,6 +174,10 @@ export default function BikesForm({
           label="Model"
           placeholder="Model"
           data={filters.models || []}
+          searchable
+          creatable
+          onCreate={(newStr) => createNewFilter('models', newStr)}
+          getCreateLabel={(query) => `+ Create ${query}`}
           {...form.getInputProps('model')}
         />
         <Select
@@ -146,11 +185,15 @@ export default function BikesForm({
           label="Color"
           placeholder="Color"
           data={filters.colors || []}
+          searchable
+          creatable
+          onCreate={(newStr) => createNewFilter('colors', newStr)}
+          getCreateLabel={(query) => `+ Create ${query}`}
           {...form.getInputProps('color')}
         />
         <TextInput
           mt="md"
-          required
+          // required
           placeholder="Image url"
           label="Image url"
           {...form.getInputProps('imgUrl')}

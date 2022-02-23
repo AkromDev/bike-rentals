@@ -82,6 +82,7 @@ const Profile = ({ reservations: _reservations }: any) => {
       </Text>
       <Text>Name: {authUser.displayName}</Text>
       <Text color="blue">Email: {authUser.email}</Text>
+      <Button onClick={authUser.signOut} mt={10} variant="outline" color="red">Sign out</Button>
       {!hasReservations && (
         <Text size="lg" component="h2" weight="bold">
           No reservations
