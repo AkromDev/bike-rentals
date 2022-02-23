@@ -6,6 +6,7 @@ import React, { ReactNode } from 'react';
 import MainLayout from 'src/components/layout/main-layout';
 import { getBike } from 'src/firebase/getBike';
 import { RentForm } from 'src/templates/RentForm';
+import { isValidHttpUrl } from 'utils';
 import Star from '../../public/star.svg';
 
 function Bike({ bike }) {
@@ -54,12 +55,12 @@ function Bike({ bike }) {
           <CardSection>
             {bike.imgUrl && (
               <Image
-                src={bike.imgUrl}
+                src={isValidHttpUrl(bike.imgUrl) ? bike.imgUrl : '/bikePlaceholder.jpeg'}
                 layout="responsive"
                 width={500}
                 height={400}
                 objectFit="cover"
-                unoptimized
+                unoptimized={isValidHttpUrl(bike.imgUrl)}
               />
             )}
           </CardSection>

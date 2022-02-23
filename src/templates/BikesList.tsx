@@ -2,6 +2,7 @@ import { Badge, Box, Button, Card, Group, SimpleGrid, Text, useMantineTheme } fr
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React from 'react';
+import { isValidHttpUrl } from 'utils';
 import Star from '../../public/star.svg';
 
 type Props = {
@@ -30,19 +31,19 @@ function BikesList({ bikes }: Props) {
               <Box component="a">
                 <Image
                   alt="Bike image"
-                  src={bike.imgUrl}
+                  src={isValidHttpUrl(bike.imgUrl) ? bike.imgUrl : '/bikePlaceholder.jpeg'}
                   layout="responsive"
                   width={700}
                   height={475}
-                  unoptimized
+                  unoptimized={isValidHttpUrl(bike.imgUrl)}
                 />
-                  <Badge
-                    color="cyan"
-                    variant="light"
-                    sx={{ position: 'absolute', top: 20, right: 10, padding: 10 }}
-                  >
-                    {bike.model}
-                  </Badge>
+                <Badge
+                  color="cyan"
+                  variant="light"
+                  sx={{ position: 'absolute', top: 20, right: 10, padding: 10 }}
+                >
+                  {bike.model}
+                </Badge>
               </Box>
             </Card.Section>
             <Group position="apart" style={{ marginBottom: 5, marginTop: theme.spacing.sm }}>
@@ -75,9 +76,7 @@ function BikesList({ bikes }: Props) {
               fullWidth
               style={{ marginTop: 14, flexGrow: 1 }}
               component="a"
-              onClick={() =>
-                router.push(`/bikes/${bike.id}?start=${start}&end=${end}`)
-              }
+              onClick={() => router.push(`/bikes/${bike.id}?start=${start}&end=${end}`)}
             >
               Book now
             </Button>

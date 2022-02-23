@@ -24,6 +24,8 @@ export default function BikeFilters(props) {
   const [model, setModel] = useState('');
   const [rating, setRating] = useState('');
 
+  const isRangeValid = dayjs(range[0]).isValid() && dayjs(range[1]).isValid();
+
   useEffect(() => {
     if (query.color) {
       setColor(query.color);
@@ -122,7 +124,9 @@ export default function BikeFilters(props) {
           maxDate={dayjs(new Date()).add(10, 'months').toDate()}
           sx={{ flex: 1 }}
         />
-        <Button onClick={onApplyFilters}>Search bikes</Button>
+        <Button onClick={onApplyFilters} disabled={!isRangeValid}>
+          Search bikes
+        </Button>
       </Group>
       <Text mt={30} weight="bold" size="lg">
         Filters
