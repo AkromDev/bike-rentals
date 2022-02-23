@@ -53,16 +53,14 @@ function Bike({ bike }) {
             </Badge>
           </Group>
           <CardSection>
-            {bike.imgUrl && (
-              <Image
-                src={isValidHttpUrl(bike.imgUrl) ? bike.imgUrl : '/bikePlaceholder.jpeg'}
-                layout="responsive"
-                width={500}
-                height={400}
-                objectFit="cover"
-                unoptimized={isValidHttpUrl(bike.imgUrl)}
-              />
-            )}
+            <Image
+              src={isValidHttpUrl(bike.imgUrl) ? bike.imgUrl : '/bikePlaceholder.jpeg'}
+              layout="responsive"
+              width={500}
+              height={400}
+              objectFit="cover"
+              unoptimized={isValidHttpUrl(bike.imgUrl)}
+            />
           </CardSection>
         </Card>
         <RentForm bike={bike} />
