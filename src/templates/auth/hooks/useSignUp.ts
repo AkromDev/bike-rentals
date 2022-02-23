@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {
   Auth,
   UserCredential,
@@ -21,11 +22,16 @@ export default (auth: Auth, options?: CreateUserOptions): EmailAndPasswordAction
       await updateProfile(user.user, {
         displayName,
       });
+      await axios.post('/api/createUserInFirestore', {
+        uid: user.user.uid,
+        email: user.user.email,
+      });
       if (options && options.sendEmailVerification && user.user) {
         await sendEmailVerification(user.user, options.emailVerificationOptions);
       }
       setRegisteredUser(user);
     } catch (err) {
+      console.log('signup error', err);
       setError(err as AuthError);
     } finally {
       setLoading(false);

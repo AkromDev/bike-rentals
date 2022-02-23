@@ -49,6 +49,7 @@ const reservationHandler = async (req: NextApiRequest, res: NextApiResponse) => 
 
       return res.status(201).send({ success: true });
     } catch (err: any) {
+      console.log('reser error', err);
       return handleFirebaseError(res, err);
     }
   } else if (method === 'PUT') {

@@ -20,7 +20,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       email,
     });
     await admin.auth().setCustomUserClaims(uid, { role });
-
+    await admin.firestore().collection('users').doc(uid).set({ email });
     return res.status(201).send({ uid });
   } catch (err: any) {
     console.log({ err });
