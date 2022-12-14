@@ -1,3 +1,8 @@
+# Test account
+1. Go to https://akromdev-bike-rentals.vercel.app/auth
+2. Click login 
+3. Login using `admin@bikes.com` and `admin123`
+
 # Bike rentals
 ## Requirements
 
